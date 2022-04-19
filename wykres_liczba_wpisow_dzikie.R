@@ -1,7 +1,9 @@
 library(jsonlite)
 library(tidyverse)
 
-l <- jsonlite::fromJSON(txt = "2022-03-21-form-1__dzikie-wysypiska.json",
+data_json <- "2022-04-12-form-1__dzikie-wysypiska.json"
+
+l <- jsonlite::fromJSON(txt = data_json,
                         flatten = TRUE)
 
 d <- l[["data"]]
@@ -27,14 +29,14 @@ d %>% count(date_user) %>% ggplot(aes(x = date_user, y = n)) +
                date_labels = "%d.%m") + 
   theme_minimal() + 
   labs(title = "Wpisy na łódzkiej mapie dzikich wysypisk", 
-       subtitle = "Od 1. do 20. marca 2022 przesłaliście nam 50 wpisów, dziękujemy!", 
+       subtitle = "Od 1. marca do 11. kwietnia 2022 przesłaliście nam 95 wpisów, dziękujemy!", 
        caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
 
 # ggsave(filename = paste(Sys.Date(), "liczba_wpisow_E5.png"),
 #        units = "cm", height = 5, width = 7) źle działa!!!
 
-ggsave(filename = paste(Sys.Date(), "liczba_wpisow_E5.jpg", sep = ""),
-       scale = 1, units = "in", width = 5, height = 3)
+ggsave(filename = paste(Sys.Date(), "_liczba_wpisow_E5.jpg", sep = ""),
+       scale = 1, units = "in", width = 6, height = 4)
 
 
 # ile zdjęć w sumie? #####
@@ -44,11 +46,6 @@ d %>% select(5:8) %>%
   mutate(ile = rowSums(.)) %>% pull(ile) %>% sum()
 
 # jaki czas odpowiedzi? 
-
-d %>% mutate(czas_odp = as.numeric(
-  parse_datetime(uploaded_at) - parse_datetime(created_at))
-  ) %>% 
-  pull(czas_odp) %>% summary()
 
 d %>% mutate(czas_odp_sekundy = as.numeric(
   parse_datetime(uploaded_at) - parse_datetime(created_at))
