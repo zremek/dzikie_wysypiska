@@ -5,7 +5,7 @@ library(jsonlite)
 
 # 1: make df with photo urls ####
 
-my_fresh_file <- "2022-04-29-form-1__dzikie-wysypiska.json"
+my_fresh_file <- "2022-05-23-form-1__dzikie-wysypiska.json"
 
 l <- jsonlite::fromJSON(txt = my_fresh_file,
                         flatten = TRUE)
