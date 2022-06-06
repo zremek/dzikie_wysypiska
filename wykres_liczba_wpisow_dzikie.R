@@ -2,7 +2,7 @@ library(jsonlite)
 library(tidyverse)
 library(lubridate)
 
-data_json <- "2022-05-23-form-1__dzikie-wysypiska.json"
+data_json <- "2022-05-31-form-1__dzikie-wysypiska.json"
 
 l <- jsonlite::fromJSON(txt = data_json,
                         flatten = TRUE)
@@ -59,7 +59,7 @@ count_date_user %>% group_by(month = floor_date(date_user, "month")) %>%
   geom_point(colour = "seagreen", size = 4) +
   scale_y_continuous(name = "liczba wpisów") + 
   scale_x_discrete(name = "miesiąc dodania wpisu", 
-                   labels = c("marzec", "kwiecień", "maj [do 22.05.]")) +
+                   labels = c("marzec", "kwiecień", "maj")) +
   theme_minimal() + 
   labs(title = "Wpisy na łódzkiej mapie dzikich wysypisk", 
        subtitle = 
@@ -103,7 +103,7 @@ d %>% group_by(volunteer_id) %>%
   geom_point(colour = "orange", size = 4) +
   scale_y_continuous(name = "liczba dołączających osób") + 
   scale_x_discrete(name = "miesiąc dołączenia pierwszego wpisu", 
-                   labels = c("marzec", "kwiecień", "maj [do 22.05.]")) +
+                   labels = c("marzec", "kwiecień", "maj")) +
   theme_minimal() + 
   labs(title = "Ochotniczki / ochotnicy na łódzkiej mapie
 dzikich wysypisk", 
