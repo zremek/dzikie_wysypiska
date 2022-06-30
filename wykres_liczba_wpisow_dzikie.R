@@ -2,7 +2,7 @@ library(jsonlite)
 library(tidyverse)
 library(lubridate)
 
-data_json <- "2022-05-31-form-1__dzikie-wysypiska.json"
+data_json <- "2022-06-30-form-1__dzikie-wysypiska.json"
 
 l <- jsonlite::fromJSON(txt = data_json,
                         flatten = TRUE)
@@ -22,7 +22,12 @@ summary(d$date_user)
 count_date_user <- d %>% count(date_user)
 n_max <- count_date_user %>% pull(n) %>% max()
 n_sum <- count_date_user %>% pull(n) %>% sum()
-date_max <- max(d$date_user)
+
+# zmiana ręczna daty max, bo jest mniejsza niż koniec miesiąca
+
+# date_max <- max(d$date_user)
+
+date_max <- "2022-06-30"
 
 count_date_user %>% 
   ggplot(aes(x = date_user, y = n)) +
