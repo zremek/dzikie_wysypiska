@@ -112,6 +112,9 @@ punkty_dzielnice <- st_intersection(x = dzielnice_4326, y = punkty_4326)
 
 punkty_dzielnice %>% count(JPT_NAZWA_)
 
+punkty_dzielnice %>% count(JPT_NAZWA_) %>% pull(n) %>% sum()
+
+
 manual_fill <- c(Bałuty = "blue", 
                  Górna = "orange", 
                  Polesie = "purple", 
@@ -132,7 +135,7 @@ ggplot() +
   guides(fill = "none") +
   labs(title = "Lokalizacja dzikich wysypisk śmieci w Łodzi i okolicach", 
 subtitle = 
-  "Jeden punkt na mapie oznacza jeden wpis", 
+  paste0("Jeden punkt na mapie oznacza jeden wpis", "\nstan na ", date_max), 
 caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
 
 ggsave(filename = paste(date_max, "_mapa_dzielnice.jpg", sep = ""),
@@ -146,13 +149,23 @@ ggsave(filename = paste(date_max, "_mapa_dzielnice.jpg", sep = ""),
 # i jak zakomunikować ludziom, że 
 ## jest 178 wpisów, 167 mają lokalizację, 163 w mieście? 
 
+punkty_n_total <- dim(punkty_4326)[1]
+
+wpisy_bez_punktu_n <- n_sum - punkty_n_total
+
+punkty_n_granice_lodzi <- punkty_dzielnice %>% count(JPT_NAZWA_) %>% 
+  pull(n) %>% sum()
+
+punkty_poza_lodzia_n <- punkty_n_total - punkty_n_granice_lodzi
+
+
 # zrobić słupkowy flip z podziałem na dzielnice
 # i dodać słup "brak współrzędnych wpisu", "punkt poza granicami m. Łodzi"
 
 punkty_dzielnice %>% count(dzielnica) %>% tibble() %>% select(-geometry) %>% 
   add_case(dzielnica = c("brak współrzędnych wpisu",
                          "punkt poza granicami Łodzi"),
-           n = c(11, 4)) %>% 
+           n = c(wpisy_bez_punktu_n, punkty_poza_lodzia_n)) %>% 
   mutate(dzielnica = fct_reorder(dzielnica, n, max)) %>% 
   ggplot(aes(x = dzielnica, 
              y = n, fill = dzielnica)) + 

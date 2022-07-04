@@ -24,6 +24,7 @@ n_max <- count_date_user %>% pull(n) %>% max()
 n_sum <- count_date_user %>% pull(n) %>% sum()
 
 # zmiana ręczna daty max, bo jest mniejsza niż koniec miesiąca
+# TODO może oddzielny skrypt na takie zmienne?
 
 # date_max <- max(d$date_user)
 
@@ -64,7 +65,7 @@ count_date_user %>% group_by(month = floor_date(date_user, "month")) %>%
   geom_point(colour = "seagreen", size = 4) +
   scale_y_continuous(name = "liczba wpisów") + 
   scale_x_discrete(name = "miesiąc dodania wpisu", 
-                   labels = c("marzec", "kwiecień", "maj")) +
+                   labels = c("marzec", "kwiecień", "maj", "czerwiec")) +
   theme_minimal() + 
   labs(title = "Wpisy na łódzkiej mapie dzikich wysypisk", 
        subtitle = 
@@ -108,7 +109,7 @@ d %>% group_by(volunteer_id) %>%
   geom_point(colour = "orange", size = 4) +
   scale_y_continuous(name = "liczba dołączających osób") + 
   scale_x_discrete(name = "miesiąc dołączenia pierwszego wpisu", 
-                   labels = c("marzec", "kwiecień", "maj")) +
+                   labels = c("marzec", "kwiecień", "maj", "czerwiec")) +
   theme_minimal() + 
   labs(title = "Ochotniczki / ochotnicy na łódzkiej mapie
 dzikich wysypisk", 
@@ -120,3 +121,6 @@ caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
 ggsave(filename = paste(date_max, "_miesięczna_liczba_osób_E5.jpg", sep = ""),
        scale = 1, units = "in", width = 4, height = 4)
 
+# uwaga, Bogusia dołączyła w czerwcu a wpis dała z kwietnia!!! ######
+# na stronę www daje to jako dołączenie w kwietniu, bo liczę daty 
+# zatwierdzone przez ludzi, a nie daty serwera 
