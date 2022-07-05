@@ -1,3 +1,5 @@
+Sys.setenv(LANGUAGE = "en")
+
 library(jsonlite)
 library(tidyverse)
 library(lubridate)

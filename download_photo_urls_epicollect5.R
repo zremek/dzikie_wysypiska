@@ -1,21 +1,35 @@
+Sys.setenv(LANGUAGE = "en")
+
 library(jsonlite)
+library(tidyverse)
 
 # step 0: manually login and download json file #####
 # from https://five.epicollect.net/project/dzikie-wysypiska/data 
 
 # 1: make df with photo urls ####
 
-my_fresh_file <- "2022-05-23-form-1__dzikie-wysypiska.json"
+previous_file <- "2022-05-23-form-1__dzikie-wysypiska.json"
+my_fresh_file <- "2022-07-05-form-1__dzikie-wysypiska.json"
 
-l <- jsonlite::fromJSON(txt = my_fresh_file,
+l_fresh <- jsonlite::fromJSON(txt = my_fresh_file,
                         flatten = TRUE)
 
-d <- l[["data"]]
+d_fresh <- l_fresh[["data"]]
 
-d1 <- d[d$`1_Prosimy_o_zdjcie_z` != "",]
-d2 <- d[d$`2_Jeli_chcesz_dodaj_` != "",]
-d3 <- d[d$`3_Jeli_chcesz_dodaj_` != "",]
-d4 <- d[d$`4_Jeli_chcesz_dodaj_` != "",]
+l_prev <- jsonlite::fromJSON(txt = previous_file,
+                        flatten = TRUE)
+
+d_prev <- l_prev[["data"]]
+
+d_diff <- left_join(x = d_fresh,
+                    y = d_prev %>% select(ec5_uuid, title), 
+                    by = "ec5_uuid") %>% 
+  filter(is.na(title.y))
+
+d1 <- d_diff[d_diff$`1_Prosimy_o_zdjcie_z` != "",]
+d2 <- d_diff[d_diff$`2_Jeli_chcesz_dodaj_` != "",]
+d3 <- d_diff[d_diff$`3_Jeli_chcesz_dodaj_` != "",]
+d4 <- d_diff[d_diff$`4_Jeli_chcesz_dodaj_` != "",]
 
 # 2: loop for download #### 
 # https://stackoverflow.com/questions/32174306/download-url-links-using-r 
