@@ -1,0 +1,165 @@
+---
+title: "Dzikie wysypiska w Łodzi. Wyniki badań"
+author: "Uniwersytet Łódzki, dyskusja grupowa 15. lipca 2022"
+output:
+  ioslides_presentation:
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+Sys.setenv(LANGUAGE = "en")
+
+library(jsonlite)
+library(tidyverse)
+library(lubridate)
+library(sf)
+library(stringr)
+library(osmdata)
+library(units)
+
+theme_set(theme_minimal(base_size = 15))
+
+data_json <- "2022-06-30-form-1__dzikie-wysypiska.json"
+
+l <- jsonlite::fromJSON(txt = data_json,
+                        flatten = TRUE)
+
+d <- l[["data"]]
+
+d <- d %>% mutate(date_user = parse_date(x = `7_Dzisiejsza_data__p`,
+                                         format = "%d/%m/%Y")) %>% 
+  filter(date_user >= "2022-03-01")
+
+d <- d %>% mutate(volunteer_id = paste0(`20_Wymyl_swoj_nazw_u`,
+                                   `21_Wpisz_swoj_nazw_u`) %>% 
+               tolower() %>% 
+               stringr::str_trim(., side = "both"))
+
+count_date_user <- d %>% count(date_user)
+n_max <- count_date_user %>% pull(n) %>% max()
+n_sum <- count_date_user %>% pull(n) %>% sum()
+
+date_max <- "2022-06-30"
+
+```
+
+## Wyniki w zakresie
+
+-   Liczby wpisów na mapę dzikich wysypisk: **`r n_sum` wpisy**
+-   Liczby ochotniczek / ochotników wysyłających wpisy: **`r d %>% count(volunteer_id) %>% pull(n) %>% length()` osoby**
+-   Rozmieszczenia dzikich wysypisk: **najwięcej wpisów z Widzewa, najbardziej zaśmiecone Śródmieście**
+-   Cech dzikich wysypisk: znamy je dla 
+
+
+Stan badań na `r date_max`
+
+
+## Liczba wpisów dziennie
+
+```{r wpis-dzien}
+count_date_user %>% 
+  ggplot(aes(x = date_user, y = n)) +
+  geom_col(width = 0.01, fill = "seagreen") +
+  geom_point(colour = "seagreen", size = 2) + 
+  scale_y_continuous(breaks = 0:n_max, minor_breaks = NULL, limits = c(0, n_max),
+                     name = "liczba wpisów") + 
+  scale_x_date(date_minor_breaks = "1 day",
+               name = "data dodania wpisu",
+               date_breaks = "14 days", 
+               date_labels = "%d.%m") + 
+  labs(title = paste0("Do ", 
+                         date_max, 
+                         " przesłaliście nam ",
+                         n_sum, 
+                         " wpisy, dziękujemy!"), 
+       caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
+```
+
+## Liczba wpisów miesięcznie
+
+```{r wpis-miesiac}
+count_date_user %>% group_by(month = floor_date(date_user, "month")) %>%
+  summarize(n = sum(n)) %>% 
+  ggplot(aes(x = as.character(month), y = n)) +
+  geom_col(width = 0.01, fill = "seagreen") +
+  geom_point(colour = "seagreen", size = 5) +
+  scale_y_continuous(name = "liczba wpisów") + 
+  scale_x_discrete(name = "miesiąc dodania wpisu", 
+                   labels = c("marzec", "kwiecień", "maj", "czerwiec")) +
+  labs(title = 
+         "Liczba przesyłanych wpisów jest coraz niższa\nw kolejnych miesiącach realizacji badania", 
+       caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
+
+```
+
+## Liczba ochotniczek / ochotników w czasie
+```{r liczba-ochotn}
+
+d %>% group_by(volunteer_id) %>% 
+  summarise(min_date = min(date_user)) %>% 
+  count(min_date) %>% group_by(month = floor_date(min_date, "month")) %>%
+  summarize(n = sum(n)) %>% 
+  ggplot(aes(x = as.character(month), y = n)) +
+  geom_col(width = 0.01, fill = "orange") +
+  geom_point(colour = "orange", size = 4) +
+  scale_y_continuous(name = "liczba dołączających osób") + 
+  scale_x_discrete(name = "miesiąc dołączenia pierwszego wpisu", 
+                   labels = c("marzec", "kwiecień", "maj", "czerwiec")) +
+  labs(title = 
+         "Liczba dołączających osób jest coraz niższa
+w kolejnych miesiącach realizacji badania", 
+caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
+```
+Łącznie wpisy na mapę dzikich wysypisk przesłały **`r d %>% count(volunteer_id) %>% pull(n) %>% length()` osoby**. 
+
+## Rozmieszczenie - mapa
+
+```{r rozmieszczenie-mapa}
+
+```
+
+## Rozmieszczenie - liczba w dzielnicach
+
+```{r rozmieszczenie-dzielnica}
+
+```
+
+## Rozmieszczenie - liczba w dzielnicach w odniesieniu do powierzchni
+
+```{r rozmieszczenie-dzielnica-mkw}
+
+```
+
+## Cechy dzikich wysypisk - ilość informacji
+
+```{r cechy-ile}
+d$`9_Czy_chcesz_nam_pow` %>% as_factor() %>%
+  summary() %>% knitr::kable(., 
+                             caption = "Jaźń jaźń")
+```
+
+## Cechy dzikich wysypisk - powierzchnia
+
+```{r cechy-powierzchnia}
+
+```
+
+## Cechy dzikich wysypisk - charakter
+
+```{r cechy-charakter}
+
+```
+
+## Cechy dzikich wysypisk - widoczność
+
+```{r cechy-widocznosc}
+
+```
+
+## Cechy dzikich wysypisk - rodzaje odpadów
+
+```{r cechy-rodzaje}
+
+```

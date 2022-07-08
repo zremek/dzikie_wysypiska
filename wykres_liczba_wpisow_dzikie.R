@@ -98,7 +98,7 @@ d <- d %>% mutate(volunteer_id = paste0(`20_Wymyl_swoj_nazw_u`,
                stringr::str_trim(., side = "both"))
 
 
-d %>% count(volunteer_id) %>% dim()
+d %>% count(volunteer_id) %>% pull(n) %>% length()
 
 # liczba ochotników dołączająca miesięcznie
 
