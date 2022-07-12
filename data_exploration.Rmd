@@ -1,9 +1,10 @@
 ---
 title: "Dzikie wysypiska w Łodzi. Wyniki badań"
-author: "Uniwersytet Łódzki, dyskusja grupowa 15. lipca 2022"
+author: "Remek"
+date: `r Sys.Date()`
 output:
-  ioslides_presentation:
-    css: style.css
+  html_document:
+    toc: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -120,6 +121,8 @@ caption = cpt)
 ```
 
 Łącznie wpisy na mapę dzikich wysypisk przesłały **`r d %>% count(volunteer_id) %>% pull(n) %>% length()` osoby**.
+
+## Aktywność ochotników / ochotniczek TODO
 
 ## Rozmieszczenie -- mapa
 
@@ -270,6 +273,11 @@ d_cechy %>% count(Czy_chcesz_nam_pow) %>%
 ```
 O ile nie wskazano inaczej, **cechy wysypisk dotyczą `r podano_cechy[2]` wpisów**. 
 
+### Ilość informacji vs. uczestnik TODO
+
+Czy podanie informacji o wysypisku zależy od tego, to robi wpis?
+Czy zależy od tego, który jest to kolejny wpis?
+
 ## Cechy dzikich wysypisk -- powierzchnia
 
 ```{r cechy-powierzchnia}
@@ -285,6 +293,8 @@ cechy_tak %>%
   scale_x_discrete(labels = function(x) str_wrap(x, width = 35)) +
   coord_flip()
 ```
+
+### Powierzchnia na mapach TODO
 
 ## Cechy dzikich wysypisk -- charakter
 
