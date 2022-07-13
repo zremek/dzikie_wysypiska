@@ -126,6 +126,10 @@ caption = cpt)
 
 Wszystkie nazwy ochotników ujednoliciłem do małych liter. Usunąłem spacje na początku i na końcu nazw. To pozwoliło liczyć nazwy wpisane np. "sebastian33444" i "Sebastian33444" jako to samo. 
 
+
+Nazwy moje (Remka) są dwie: Rmo i Uffo7. Wcześniej korzystałem z Uffo7, potem na potrzeby nagrywania instrukcji wymyśliłem inną nazwę aby pokazać w formularzu ścieżkę przesyłania wpisu po raz pierwszy. 
+
+
 ### Ilość wpisów na konkretnego ochotnika
 
 ```{r aktywn-ochot}
@@ -407,7 +411,67 @@ O ile nie wskazano inaczej, **cechy wysypisk dotyczą `r podano_cechy[2]` wpisó
 
 ### Ilość informacji vs. uczestnik TODO
 
-Czy podanie informacji o wysypisku zależy od tego, to robi wpis? Czy zależy od tego, który jest to kolejny wpis?
+Czy podanie informacji o wysypisku zależy od tego, kto robi wpis? Czy zależy od tego, który jest to kolejny wpis?
+
+```{r info-a-uczestnik}
+info_uczestnik <- d %>% group_by(volunteer_id, `9_Czy_chcesz_nam_pow`) %>% 
+  summarise(liczba_wpis = n()) 
+
+info_uczestnik %>% ggplot(aes(x = fct_reorder(.f = volunteer_id,
+                                   .x = liczba_wpis,
+                                   .fun = sum),
+                   y = liczba_wpis,
+                   fill = `9_Czy_chcesz_nam_pow`)) +
+  geom_col() + 
+  coord_flip()
+```
+
+Są osoby zawsze wpisujące informacje, są takie, które tego nie robią. Jak to wyjaśnić? Nie wiem, czy mamy coś sensownego w danych na ten temat. 
+
+Może sama liczba wpisów? 
+
+```{r liczba-wpis-a-info}
+info_uczestnik_wide <- info_uczestnik %>% 
+  pivot_wider(names_from = `9_Czy_chcesz_nam_pow`, 
+              values_from = liczba_wpis) %>% 
+  mutate(liczba_wpis_sum = sum(Nie, Tak, na.rm = TRUE))
+
+info_uczestnik_wide[is.na(info_uczestnik_wide)] <- 0
+
+info_uczestnik_wide %>% ggplot(aes(x = liczba_wpis_sum, 
+                                   y = Tak)) + 
+  geom_point() + geom_jitter() + geom_smooth()
+
+```
+Nie widzę zależności. 
+
+```{r liczba-wpis-info-boxpl}
+info_uczestnik_wide %>% ggplot(aes(y = liczba_wpis_sum, 
+                                   x = Tak > 0)) + 
+  geom_boxplot()
+```
+
+Też nic nie widać. 
+
+Jeszcze zobaczymy frakcję "tak" w zależności od pogrupowanej liczby wpisów 
+
+```{r frc-tak-liczba-wpis}
+
+table(info_uczestnik_wide$liczba_wpis_sum > 2)
+
+info_uczestnik_wide %>% 
+  mutate(frc_tak = Tak / liczba_wpis_sum) %>% 
+  ggplot(aes(x = liczba_wpis_sum > 1, y = frc_tak)) + 
+  geom_boxplot()
+
+info_uczestnik_wide %>% 
+  mutate(frc_tak = Tak / liczba_wpis_sum) %>% summary()
+  
+```
+
+Nie widzę zależności i jest to mało intuicyjne. 
+
+TODO - potraktować wpisy jako sekwencję po dacie, pierwszy, drugi itp. spróbować na tym to sprawdzić 
 
 ## Cechy dzikich wysypisk -- powierzchnia
 
