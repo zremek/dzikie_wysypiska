@@ -1,7 +1,7 @@
 ---
 title: "Dzikie wysypiska w Łodzi. Wyniki badań"
 author: "Remek"
-date: `r Sys.Date()`
+date: "`r Sys.Date()`"
 output:
   html_document:
     toc: TRUE
@@ -122,7 +122,138 @@ caption = cpt)
 
 Łącznie wpisy na mapę dzikich wysypisk przesłały **`r d %>% count(volunteer_id) %>% pull(n) %>% length()` osoby**.
 
-## Aktywność ochotników / ochotniczek TODO
+## Aktywność ochotników / ochotniczek
+
+Wszystkie nazwy ochotników ujednoliciłem do małych liter. Usunąłem spacje na początku i na końcu nazw. To pozwoliło liczyć nazwy wpisane np. "sebastian33444" i "Sebastian33444" jako to samo. 
+
+### Ilość wpisów na konkretnego ochotnika
+
+```{r aktywn-ochot}
+
+d %>% count(volunteer_id) %>% arrange(-n) %>%
+  kbl() %>%
+  kable_minimal(full_width = FALSE)
+```
+
+### Ile osób zrobiło jeden wpis? Ile więcej? 
+
+Mamy dużo osób, które zrobiły mało wpisów, a mało takich które zrobiły dużo. 
+
+To jest też typowe np. w użytkowaniu mediów społecznościowych (mało osób ma wysoką aktywność a dużą ma małą).
+
+```{r aktywn-ochot-nn}
+
+d %>% count(volunteer_id) %>% count(n) %>%
+  rename(liczba_wpis = n, liczba_ochotnik = nn) %>% 
+  arrange(liczba_wpis) %>%
+  kbl() %>%
+  kable_minimal(full_width = FALSE)
+
+```
+
+### Ilość wpisów a długość zaangażowania w projekt
+
+Zobaczymy jeszcze, czy ilość wpisów jest powiązana z tym, jak długo ochotnik jest z nami. Biorę datę zatwierdzaną przez ochotnika. 
+
+Liczę różnicę dat jako ostatnia_data - pierwsza_data + 1. Czyli 1 dzień oznacza, że ochotnik przesłał wpisy tylko jednego dnia. 
+
+```{r liczba-wpis-a-czas-tab}
+as_num_difftime <- function(end, beginning) {
+  round(as.numeric(difftime(as.POSIXct(end),
+                      as.POSIXct(beginning),
+                      units = "days")))
+}
+
+volunt_difftime <- d %>% group_by(volunteer_id) %>%
+  summarise(liczba_wpis = n(),
+            pierwszy_ostatni_wpis_ile_dni = 1 + as_num_difftime(max(date_user),
+                                                            min(date_user)))
+
+volunt_difftime %>% 
+  arrange(-liczba_wpis) %>% 
+  kbl() %>% kable_minimal(full_width = FALSE)
+```
+
+Na wykresie trochę widać zależność monotoniczną -- jak rośnie jedno to drugie też. Jest przy tym dużo pojedynczych wpisów. 
+
+```{r liczba-wpis-a-czas-wykres}
+
+pvd <- volunt_difftime %>%
+  ggplot(aes(x = pierwszy_ostatni_wpis_ile_dni,
+             y = liczba_wpis,
+             label = volunteer_id)) + 
+  geom_point(alpha = 0.1) +
+  geom_jitter()
+
+pvd 
+
+
+```
+Skala logarytmiczna żeby "rozgciągnąć" niskie wartości, których jest większość:
+
+```{r liczba-wpis-a-czas-log}
+pvd + scale_x_log10() + scale_y_log10()
+```
+Zobaczmy to z trendem i nazwami ochotników:
+
+```{r liczba-wpis-a-czas-log-text}
+pvd + geom_text(check_overlap = TRUE) + scale_x_log10() + scale_y_log10() +
+  geom_smooth()
+```
+
+Zobaczmy to samo ale tylko dla tych, co mają więcej, niż 1 wpis:
+
+```{r liczba-wpis-a-czas-log-text}
+volunt_difftime_1 <- volunt_difftime %>% filter(liczba_wpis > 1)
+
+pvd_1 <- volunt_difftime_1 %>%
+  ggplot(aes(x = pierwszy_ostatni_wpis_ile_dni,
+             y = liczba_wpis,
+             label = volunteer_id)) + 
+  geom_point(alpha = 0.1) +
+  geom_jitter()
+
+
+pvd_1 + geom_text(check_overlap = TRUE) + scale_x_log10() + scale_y_log10() +
+  geom_smooth()
+```
+
+Ci co są dłużej niż 10 dni mają więcej wpisów? 
+
+```{r liczba-czas-10}
+volunt_difftime %>% ggplot(aes(x = pierwszy_ostatni_wpis_ile_dni > 10,
+                               y = liczba_wpis)) + 
+  geom_boxplot()
+```
+
+To są nierówne grupy. Tych, co są dłużej mamy znacznie mniej. 
+
+```{r tab-dni}
+table(volunt_difftime$pierwszy_ostatni_wpis_ile_dni > 10,
+      dnn = "pierwszy_ostatni_wpis_ile_dni > 10")
+```
+
+
+```{r liczba-a-czas-corr}
+liczba_a_czas_corr_spe <- cor.test(volunt_difftime$pierwszy_ostatni_wpis_ile_dni,
+         volunt_difftime$liczba_wpis, method = "spearman")
+
+liczba_a_czas_corr_spe
+
+```
+
+Korelacja wychodzi `r liczba_a_czas_corr_spe$estimate` czyli tak, im dłużej ochotnik jest z nami tym ma więcej wpisów.
+
+
+Może najsensowniej byłoby to policzyć tylko dla osób, mających więcej, niż 1 wpis bo takie z 1 wpisem mają zawsze 1 dzień? 
+
+```{r corr-over-1}
+
+cor.test(volunt_difftime_1$pierwszy_ostatni_wpis_ile_dni,
+         volunt_difftime_1$liczba_wpis, method = "spearman")
+```
+
+Tutaj **współczynnik jest niższy**, niż kiedy braliśmy wszystkich. 
 
 ## Rozmieszczenie -- mapa
 
@@ -271,12 +402,12 @@ d_cechy %>% count(Czy_chcesz_nam_pow) %>%
 
 #TODO add yellow highlight to "tak" 
 ```
-O ile nie wskazano inaczej, **cechy wysypisk dotyczą `r podano_cechy[2]` wpisów**. 
+
+O ile nie wskazano inaczej, **cechy wysypisk dotyczą `r podano_cechy[2]` wpisów**.
 
 ### Ilość informacji vs. uczestnik TODO
 
-Czy podanie informacji o wysypisku zależy od tego, to robi wpis?
-Czy zależy od tego, który jest to kolejny wpis?
+Czy podanie informacji o wysypisku zależy od tego, to robi wpis? Czy zależy od tego, który jest to kolejny wpis?
 
 ## Cechy dzikich wysypisk -- powierzchnia
 
@@ -346,6 +477,7 @@ rodzaje_long %>%
   theme_minimal(base_size = 12) +
   coord_flip()
 ```
+
 Pytanie wielokrotnego wyboru, odpowiedzi nie sumują się do 50 wpisów.
 
 ## Cechy dzikich wysypisk -- widoczność
@@ -377,4 +509,3 @@ cechy_tak %>%
    scale_x_discrete(labels = function(x) str_wrap(x, width = 35)) +
   coord_flip()
 ```
-
