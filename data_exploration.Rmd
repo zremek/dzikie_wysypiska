@@ -21,8 +21,9 @@ library(osmdata)
 library(units)
 library(kableExtra)
 library(reshape2)
+library(sjPlot)
 
-theme_set(theme_minimal(base_size = 15))
+theme_set(theme_minimal())
 
 data_json <- "2022-06-30-form-1__dzikie-wysypiska.json"
 
@@ -178,6 +179,7 @@ volunt_difftime %>%
   kbl() %>% kable_minimal(full_width = FALSE)
 ```
 
+
 Na wykresie trochę widać zależność monotoniczną -- jak rośnie jedno to drugie też. Jest przy tym dużo pojedynczych wpisów. 
 
 ```{r liczba-wpis-a-czas-wykres}
@@ -193,11 +195,15 @@ pvd
 
 
 ```
+
+
 Skala logarytmiczna żeby "rozgciągnąć" niskie wartości, których jest większość:
 
 ```{r liczba-wpis-a-czas-log}
 pvd + scale_x_log10() + scale_y_log10()
 ```
+
+
 Zobaczmy to z trendem i nazwami ochotników:
 
 ```{r liczba-wpis-a-czas-log-text}
@@ -205,9 +211,10 @@ pvd + geom_text(check_overlap = TRUE) + scale_x_log10() + scale_y_log10() +
   geom_smooth()
 ```
 
+
 Zobaczmy to samo ale tylko dla tych, co mają więcej, niż 1 wpis:
 
-```{r liczba-wpis-a-czas-log-text}
+```{r liczba-wpis-a-czas-log-text-1}
 volunt_difftime_1 <- volunt_difftime %>% filter(liczba_wpis > 1)
 
 pvd_1 <- volunt_difftime_1 %>%
@@ -222,6 +229,7 @@ pvd_1 + geom_text(check_overlap = TRUE) + scale_x_log10() + scale_y_log10() +
   geom_smooth()
 ```
 
+
 Ci co są dłużej niż 10 dni mają więcej wpisów? 
 
 ```{r liczba-czas-10}
@@ -229,6 +237,7 @@ volunt_difftime %>% ggplot(aes(x = pierwszy_ostatni_wpis_ile_dni > 10,
                                y = liczba_wpis)) + 
   geom_boxplot()
 ```
+
 
 To są nierówne grupy. Tych, co są dłużej mamy znacznie mniej. 
 
@@ -443,6 +452,8 @@ info_uczestnik_wide %>% ggplot(aes(x = liczba_wpis_sum,
   geom_point() + geom_jitter() + geom_smooth()
 
 ```
+
+
 Nie widzę zależności. 
 
 ```{r liczba-wpis-info-boxpl}
@@ -450,6 +461,7 @@ info_uczestnik_wide %>% ggplot(aes(y = liczba_wpis_sum,
                                    x = Tak > 0)) + 
   geom_boxplot()
 ```
+
 
 Też nic nie widać. 
 
@@ -504,6 +516,8 @@ cechy_tak %>%
   coord_flip()
 ```
 
+### Inny -- jaki to charakter? TODO
+
 ## Cechy dzikich wysypisk -- miejsce
 
 ```{r cechy-miejsce}
@@ -515,7 +529,31 @@ cechy_tak %>%
        caption = cpt) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 45)) +
   coord_flip()
+
+# uwaga od Oli-geografki: teren zieleni, a nie zielony 
 ```
+
+### Inne -- jakie to miejsce? TODO
+
+### Charakter vs. powierzchnia
+
+```{r charakter-powierzchnia}
+# 
+# table(cechy_tak$Jak_oceniasz_powi,
+#       cechy_tak$Jaki_jest_charakt) %>%
+#   kbl() %>% kable_minimal()
+# 
+# expss::cro_cases(cechy_tak$Jak_oceniasz_powi, cechy_tak$Jaki_jest_charakt) %>% 
+#   kbl() %>% kable_minimal()
+# 
+# cechy_tak %>% ggplot(aes(x = Jak_oceniasz_powi, y = Jaki_jest_charakt)) + 
+#   geom_count()
+
+sjPlot::tab_xtab(var.row = cechy_tak$Jak_oceniasz_powi,
+                 var.col = cechy_tak$Jaki_jest_charakt)
+
+```
+
 
 ## Cechy dzikich wysypisk -- rodzaje odpadów
 
