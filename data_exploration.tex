@@ -1,0 +1,923 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Dzikie wysypiska w Łodzi. Wyniki badań},
+  pdfauthor={Remek},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Dzikie wysypiska w Łodzi. Wyniki badań}
+\author{Remek}
+\date{2022-07-25}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{wyniki-w-zakresie}{%
+\subsection{Wyniki w zakresie}\label{wyniki-w-zakresie}}
+
+\begin{itemize}
+\tightlist
+\item
+  Liczby wpisów na mapę dzikich wysypisk: \textbf{183 wpisy}
+\item
+  Liczby ochotniczek / ochotników wysyłających wpisy: \textbf{54 osoby}
+\item
+  Rozmieszczenia dzikich wysypisk: \textbf{najwięcej wpisów z Widzewa,
+  najbardziej zaśmiecone Śródmieście}
+\item
+  Cech dzikich wysypisk: znamy je dla \textbf{27\%} wpisów (50 z 183).
+\end{itemize}
+
+Stan badań na 2022-06-30
+
+\hypertarget{liczba-wpisuxf3w-dziennie}{%
+\subsection{Liczba wpisów dziennie}\label{liczba-wpisuxf3w-dziennie}}
+
+\includegraphics{data_exploration_files/figure-latex/wpis-dzien-1.pdf}
+
+\hypertarget{liczba-wpisuxf3w-miesiux119cznie}{%
+\subsection{Liczba wpisów
+miesięcznie}\label{liczba-wpisuxf3w-miesiux119cznie}}
+
+\includegraphics{data_exploration_files/figure-latex/wpis-miesiac-1.pdf}
+
+\hypertarget{liczba-ochotniczek-ochotnikuxf3w-w-czasie}{%
+\subsection{Liczba ochotniczek / ochotników w
+czasie}\label{liczba-ochotniczek-ochotnikuxf3w-w-czasie}}
+
+\includegraphics{data_exploration_files/figure-latex/liczba-ochotn-1.pdf}
+
+Łącznie wpisy na mapę dzikich wysypisk przesłały \textbf{54 osoby}.
+
+\hypertarget{aktywnoux15bux107-ochotnikuxf3w-ochotniczek}{%
+\subsection{Aktywność ochotników /
+ochotniczek}\label{aktywnoux15bux107-ochotnikuxf3w-ochotniczek}}
+
+Wszystkie nazwy ochotników ujednoliciłem do małych liter. Usunąłem
+spacje na początku i na końcu nazw. To pozwoliło liczyć nazwy wpisane
+np. ``sebastian33444'' i ``Sebastian33444'' jako to samo.
+
+Nazwy moje (Remka) są dwie: Rmo i Uffo7. Wcześniej korzystałem z Uffo7,
+potem na potrzeby nagrywania instrukcji wymyśliłem inną nazwę aby
+pokazać w formularzu ścieżkę przesyłania wpisu po raz pierwszy.
+
+\hypertarget{iloux15bux107-wpisuxf3w-na-konkretnego-ochotnika}{%
+\subsubsection{Ilość wpisów na konkretnego
+ochotnika}\label{iloux15bux107-wpisuxf3w-na-konkretnego-ochotnika}}
+
+\begin{table}
+\centering
+\begin{tabular}[t]{l|r}
+\hline
+volunteer\_id & n\\
+\hline
+katarzyna wasilewska & 16\\
+\hline
+pkrupnik & 15\\
+\hline
+rmo & 15\\
+\hline
+hpruszyn & 14\\
+\hline
+alex1313 & 13\\
+\hline
+email\_dzikiewysypiska & 11\\
+\hline
+kraterek & 9\\
+\hline
+ktk & 8\\
+\hline
+anna\_krzynowek & 5\\
+\hline
+darkerone & 5\\
+\hline
+langel & 5\\
+\hline
+uffo7 & 4\\
+\hline
+kolija & 3\\
+\hline
+quks & 3\\
+\hline
+radkel & 3\\
+\hline
+taranah & 3\\
+\hline
+twardy & 3\\
+\hline
+zwiedzamłódź & 3\\
+\hline
+alex & 2\\
+\hline
+efem & 2\\
+\hline
+gargl & 2\\
+\hline
+jul\_woj & 2\\
+\hline
+maciej & 2\\
+\hline
+ms1996 & 2\\
+\hline
+radosław antosik & 2\\
+\hline
+sebastian33444 & 2\\
+\hline
+tooomasz & 2\\
+\hline
+ainka & 1\\
+\hline
+alexxx19 & 1\\
+\hline
+atom & 1\\
+\hline
+bogusia & 1\\
+\hline
+dim79 & 1\\
+\hline
+ezamar & 1\\
+\hline
+j13 & 1\\
+\hline
+jerzy1956 & 1\\
+\hline
+jmp & 1\\
+\hline
+juha & 1\\
+\hline
+juliaróża & 1\\
+\hline
+juliaz & 1\\
+\hline
+kacperka1 & 1\\
+\hline
+kasia chojnacka & 1\\
+\hline
+katarzyna & 1\\
+\hline
+magpas & 1\\
+\hline
+małgo & 1\\
+\hline
+małgorzata & 1\\
+\hline
+nittka969 & 1\\
+\hline
+noyes & 1\\
+\hline
+nukazet & 1\\
+\hline
+ps & 1\\
+\hline
+romek1076 & 1\\
+\hline
+sejti & 1\\
+\hline
+sierra & 1\\
+\hline
+tomektramwaj & 1\\
+\hline
+ula urszula & 1\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{ile-osuxf3b-zrobiux142o-jeden-wpis-ile-wiux119cej}{%
+\subsubsection{Ile osób zrobiło jeden wpis? Ile
+więcej?}\label{ile-osuxf3b-zrobiux142o-jeden-wpis-ile-wiux119cej}}
+
+Mamy dużo osób, które zrobiły mało wpisów, a mało takich które zrobiły
+dużo.
+
+To jest też typowe np. w użytkowaniu mediów społecznościowych (mało osób
+ma wysoką aktywność a dużą ma małą).
+
+\begin{table}
+\centering
+\begin{tabular}[t]{r|r}
+\hline
+liczba\_wpis & liczba\_ochotnik\\
+\hline
+1 & 27\\
+\hline
+2 & 9\\
+\hline
+3 & 6\\
+\hline
+4 & 1\\
+\hline
+5 & 3\\
+\hline
+8 & 1\\
+\hline
+9 & 1\\
+\hline
+11 & 1\\
+\hline
+13 & 1\\
+\hline
+14 & 1\\
+\hline
+15 & 2\\
+\hline
+16 & 1\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{iloux15bux107-wpisuxf3w-a-dux142ugoux15bux107-zaangaux17cowania-w-projekt}{%
+\subsubsection{Ilość wpisów a długość zaangażowania w
+projekt}\label{iloux15bux107-wpisuxf3w-a-dux142ugoux15bux107-zaangaux17cowania-w-projekt}}
+
+Zobaczymy jeszcze, czy ilość wpisów jest powiązana z tym, jak długo
+ochotnik jest z nami. Biorę datę zatwierdzaną przez ochotnika.
+
+Liczę różnicę dat jako ostatnia\_data - pierwsza\_data + 1. Czyli 1
+dzień oznacza, że ochotnik przesłał wpisy tylko jednego dnia.
+
+\begin{table}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+volunteer\_id & liczba\_wpis & pierwszy\_ostatni\_wpis\_ile\_dni\\
+\hline
+katarzyna wasilewska & 16 & 96\\
+\hline
+pkrupnik & 15 & 51\\
+\hline
+rmo & 15 & 57\\
+\hline
+hpruszyn & 14 & 11\\
+\hline
+alex1313 & 13 & 16\\
+\hline
+email\_dzikiewysypiska & 11 & 49\\
+\hline
+kraterek & 9 & 28\\
+\hline
+ktk & 8 & 101\\
+\hline
+anna\_krzynowek & 5 & 7\\
+\hline
+darkerone & 5 & 44\\
+\hline
+langel & 5 & 2\\
+\hline
+uffo7 & 4 & 28\\
+\hline
+kolija & 3 & 1\\
+\hline
+quks & 3 & 1\\
+\hline
+radkel & 3 & 1\\
+\hline
+taranah & 3 & 24\\
+\hline
+twardy & 3 & 2\\
+\hline
+zwiedzamłódź & 3 & 1\\
+\hline
+alex & 2 & 26\\
+\hline
+efem & 2 & 4\\
+\hline
+gargl & 2 & 19\\
+\hline
+jul\_woj & 2 & 1\\
+\hline
+maciej & 2 & 19\\
+\hline
+ms1996 & 2 & 1\\
+\hline
+radosław antosik & 2 & 1\\
+\hline
+sebastian33444 & 2 & 37\\
+\hline
+tooomasz & 2 & 1\\
+\hline
+ainka & 1 & 1\\
+\hline
+alexxx19 & 1 & 1\\
+\hline
+atom & 1 & 1\\
+\hline
+bogusia & 1 & 1\\
+\hline
+dim79 & 1 & 1\\
+\hline
+ezamar & 1 & 1\\
+\hline
+j13 & 1 & 1\\
+\hline
+jerzy1956 & 1 & 1\\
+\hline
+jmp & 1 & 1\\
+\hline
+juha & 1 & 1\\
+\hline
+juliaróża & 1 & 1\\
+\hline
+juliaz & 1 & 1\\
+\hline
+kacperka1 & 1 & 1\\
+\hline
+kasia chojnacka & 1 & 1\\
+\hline
+katarzyna & 1 & 1\\
+\hline
+magpas & 1 & 1\\
+\hline
+małgo & 1 & 1\\
+\hline
+małgorzata & 1 & 1\\
+\hline
+nittka969 & 1 & 1\\
+\hline
+noyes & 1 & 1\\
+\hline
+nukazet & 1 & 1\\
+\hline
+ps & 1 & 1\\
+\hline
+romek1076 & 1 & 1\\
+\hline
+sejti & 1 & 1\\
+\hline
+sierra & 1 & 1\\
+\hline
+tomektramwaj & 1 & 1\\
+\hline
+ula urszula & 1 & 1\\
+\hline
+\end{tabular}
+\end{table}
+
+Na wykresie trochę widać zależność monotoniczną -- jak rośnie jedno to
+drugie też. Jest przy tym dużo pojedynczych wpisów.
+
+\includegraphics{data_exploration_files/figure-latex/liczba-wpis-a-czas-wykres-1.pdf}
+
+Skala logarytmiczna żeby ``rozgciągnąć'' niskie wartości, których jest
+większość:
+
+\includegraphics{data_exploration_files/figure-latex/liczba-wpis-a-czas-log-1.pdf}
+
+Zobaczmy to z trendem i nazwami ochotników:
+
+\includegraphics{data_exploration_files/figure-latex/liczba-wpis-a-czas-log-text-1.pdf}
+
+Zobaczmy to samo ale tylko dla tych, co mają więcej, niż 1 wpis:
+
+\includegraphics{data_exploration_files/figure-latex/liczba-wpis-a-czas-log-text-1-1.pdf}
+
+Ci co są dłużej niż 10 dni mają więcej wpisów?
+
+\includegraphics{data_exploration_files/figure-latex/liczba-czas-10-1.pdf}
+
+To są nierówne grupy. Tych, co są dłużej mamy znacznie mniej.
+
+\begin{verbatim}
+## pierwszy_ostatni_wpis_ile_dni > 10
+## FALSE  TRUE 
+##    39    15
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Spearman's rank correlation rho
+## 
+## data:  volunt_difftime$pierwszy_ostatni_wpis_ile_dni and volunt_difftime$liczba_wpis
+## S = 5140.3, p-value = 2.453e-13
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##       rho 
+## 0.8040663
+\end{verbatim}
+
+Korelacja wychodzi 0.8040663 czyli tak, im dłużej ochotnik jest z nami
+tym ma więcej wpisów.
+
+Może najsensowniej byłoby to policzyć tylko dla osób, mających więcej,
+niż 1 wpis bo takie z 1 wpisem mają zawsze 1 dzień?
+
+\begin{verbatim}
+## 
+##  Spearman's rank correlation rho
+## 
+## data:  volunt_difftime_1$pierwszy_ostatni_wpis_ile_dni and volunt_difftime_1$liczba_wpis
+## S = 1415.2, p-value = 0.001998
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##   rho 
+## 0.568
+\end{verbatim}
+
+Tutaj \textbf{współczynnik jest niższy}, niż kiedy braliśmy wszystkich.
+
+\hypertarget{rozmieszczenie-mapa}{%
+\subsection{Rozmieszczenie -- mapa}\label{rozmieszczenie-mapa}}
+
+\includegraphics{data_exploration_files/figure-latex/rozmieszczenie-mapa-1.pdf}
+
+Jeden punkt na mapie oznacza jeden wpis. Łącznie 172 punkty, 94\% z 183
+wpisów.
+
+\hypertarget{rozmieszczenie-liczba-w-dzielnicach}{%
+\subsection{Rozmieszczenie -- liczba w
+dzielnicach}\label{rozmieszczenie-liczba-w-dzielnicach}}
+
+\includegraphics{data_exploration_files/figure-latex/rozmieszczenie-dzielnica-1.pdf}
+
+\hypertarget{rozmieszczenie-liczba-w-dzielnicach-w-odniesieniu-do-powierzchni}{%
+\subsection{Rozmieszczenie -- liczba w dzielnicach w odniesieniu do
+powierzchni}\label{rozmieszczenie-liczba-w-dzielnicach-w-odniesieniu-do-powierzchni}}
+
+\includegraphics{data_exploration_files/figure-latex/rozmieszczenie-dzielnica-mkw-1.pdf}
+
+\hypertarget{cechy-dzikich-wysypisk-iloux15bux107-informacji}{%
+\subsection{Cechy dzikich wysypisk -- ilość
+informacji}\label{cechy-dzikich-wysypisk-iloux15bux107-informacji}}
+
+\begin{table}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+Podano informację o wysypisku & n & \%\\
+\hline
+Nie & 133 & 73\\
+\hline
+Tak & 50 & 27\\
+\hline
+SUMA & 183 & 100\\
+\hline
+\end{tabular}
+\end{table}
+
+O ile nie wskazano inaczej, \textbf{cechy wysypisk dotyczą 50 wpisów}.
+
+\hypertarget{iloux15bux107-informacji-vs.-uczestnik-todo}{%
+\subsubsection{Ilość informacji vs.~uczestnik
+TODO}\label{iloux15bux107-informacji-vs.-uczestnik-todo}}
+
+Czy podanie informacji o wysypisku zależy od tego, kto robi wpis? Czy
+zależy od tego, który jest to kolejny wpis?
+
+\includegraphics{data_exploration_files/figure-latex/info-a-uczestnik-1.pdf}
+
+Są osoby zawsze wpisujące informacje, są takie, które tego nie robią.
+Jak to wyjaśnić? Nie wiem, czy mamy coś sensownego w danych na ten
+temat.
+
+Może sama liczba wpisów?
+
+\includegraphics{data_exploration_files/figure-latex/liczba-wpis-a-info-1.pdf}
+
+Nie widzę zależności.
+
+\includegraphics{data_exploration_files/figure-latex/liczba-wpis-info-boxpl-1.pdf}
+
+Też nic nie widać.
+
+Jeszcze zobaczymy frakcję ``tak'' w zależności od pogrupowanej liczby
+wpisów
+
+\begin{verbatim}
+## 
+## FALSE  TRUE 
+##    36    18
+\end{verbatim}
+
+\includegraphics{data_exploration_files/figure-latex/frc-tak-liczba-wpis-1.pdf}
+
+\begin{verbatim}
+##  volunteer_id            Nie              Tak         liczba_wpis_sum 
+##  Length:54          Min.   : 0.000   Min.   :0.0000   Min.   : 1.000  
+##  Class :character   1st Qu.: 0.000   1st Qu.:0.0000   1st Qu.: 1.000  
+##  Mode  :character   Median : 1.000   Median :0.5000   Median : 1.500  
+##                     Mean   : 2.463   Mean   :0.9259   Mean   : 3.389  
+##                     3rd Qu.: 2.000   3rd Qu.:1.0000   3rd Qu.: 3.000  
+##                     Max.   :15.000   Max.   :6.0000   Max.   :16.000  
+##     frc_tak       
+##  Min.   :0.00000  
+##  1st Qu.:0.00000  
+##  Median :0.03125  
+##  Mean   :0.36263  
+##  3rd Qu.:1.00000  
+##  Max.   :1.00000
+\end{verbatim}
+
+Nie widzę zależności i jest to mało intuicyjne.
+
+TODO - potraktować wpisy jako sekwencję po dacie, pierwszy, drugi itp.
+spróbować na tym to sprawdzić
+
+\hypertarget{cechy-dzikich-wysypisk-powierzchnia}{%
+\subsection{Cechy dzikich wysypisk --
+powierzchnia}\label{cechy-dzikich-wysypisk-powierzchnia}}
+
+\includegraphics{data_exploration_files/figure-latex/cechy-powierzchnia-1.pdf}
+
+\hypertarget{powierzchnia-na-mapach}{%
+\subsubsection{Powierzchnia na mapach}\label{powierzchnia-na-mapach}}
+
+\begin{verbatim}
+## 'data.frame':    183 obs. of  35 variables:
+##  $ ec5_uuid                         : chr  "1e640a49-7e2f-4efa-a188-a3e935b01d08" "23898937-08cd-4e19-9ab6-892b83efff03" "fd37c2a2-bf35-431d-9e6e-a68af049369a" "90bdcd8b-d072-4fc1-b017-ff29cdb5f26c" ...
+##  $ created_at                       : chr  "2022-06-16T08:56:59.433Z" "2022-06-16T08:52:33.087Z" "2022-06-12T14:00:19.052Z" "2022-06-10T10:34:43.386Z" ...
+##  $ uploaded_at                      : chr  "2022-06-16T08:57:06.000Z" "2022-06-16T08:52:38.000Z" "2022-06-12T14:00:25.000Z" "2022-06-10T10:34:50.000Z" ...
+##  $ title                            : chr  "16/06/2022 10:54:39 Ula Urszula" "16/06/2022 10:50:56" "12/06/2022 16:00:03" "10/06/2022 12:33:07" ...
+##  $ 1_Prosimy_o_zdjcie_z             : chr  "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=1e640a49-7e2f-4efa"| __truncated__ "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=23898937-08cd-4e19"| __truncated__ "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=fd37c2a2-bf35-431d"| __truncated__ "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=90bdcd8b-d072-4fc1"| __truncated__ ...
+##  $ 2_Jeli_chcesz_dodaj_             : chr  "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=1e640a49-7e2f-4efa"| __truncated__ "" "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=fd37c2a2-bf35-431d"| __truncated__ "" ...
+##  $ 3_Jeli_chcesz_dodaj_             : chr  "https://five.epicollect.net/api/media/dzikie-wysypiska?type=photo&format=entry_original&name=1e640a49-7e2f-4efa"| __truncated__ "" "" "" ...
+##  $ 4_Jeli_chcesz_dodaj_             : chr  "" "" "" "" ...
+##  $ 6_Jeeli_masz_uwagi_d             : chr  "Park źródliska II" "Park źródliska II" "" "Plastikowe butelki w Lasku przy osiedlu" ...
+##  $ 7_Dzisiejsza_data__p             : chr  "16/06/2022" "16/06/2022" "12/06/2022" "10/06/2022" ...
+##  $ 8_Aktualny_czas__pro             : chr  "10:54:39" "10:50:56" "16:00:03" "12:33:07" ...
+##  $ 9_Czy_chcesz_nam_pow             : chr  "Tak" "Tak" "Nie" "Tak" ...
+##  $ 10_Jak_oceniasz_powi             : chr  "od 6 do 50 m. kw - pokój lub kilka pokoi" "trudno powiedzieć" "" "do 5 metrów kwadratowych (m. kw) - mniejsze niż mały pokój" ...
+##  $ 11_Jaki_jest_charakt             : chr  "drobne odpady rozproszone" "pojedyncze duże gabaryty (np. muszla klozetowa, lodówka)" "" "zwarty stos odpadów" ...
+##  $ 12_Opisz_charakter_z             : chr  "" "" "" "" ...
+##  $ 13_Czy_moesz_oceni_c             : chr  "powstałe w ostatnich miesiącach" "powstałe w ostatnich miesiącach" "" "powstałe w ostatnich dniach" ...
+##  $ 14_W_jakim_miejscu_j             : chr  "teren zielony w mieście (zieleń miejska, park, skwer)" "teren zielony w mieście (zieleń miejska, park, skwer)" "" "teren zielony w mieście (zieleń miejska, park, skwer)" ...
+##  $ 15_Opisz_miejsce_zna             : chr  "" "" "" "" ...
+##  $ 16_Czy_znalezione_wy             : chr  "Dobrze widoczne" "Dobrze widoczne" "" "Dobrze widoczne" ...
+##  $ 17_Jakie_rodzaje_odp             :List of 183
+##   ..$ : chr  "folie" "plastik" "szkło " "butelki po alkoholu"
+##   ..$ : chr "inne"
+##   ..$ : chr 
+##   ..$ : chr "plastik"
+##   ..$ : chr  "przeterminowane środki ochrony roślin" "plastik" "tekstylia" "szkło " ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "plastik" "szkło " "zużyte opony" "meble" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "zużyte opony" "folie" "szkło " ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "meble" "elektroodpady (zużyty sprzęt elektryczny i elektroniczny) " "plastik" "tekstylia" ...
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "meble" "zużyte opony" "folie" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr "części samochodowe"
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "plastik" "szkło " "złom metalowy" ...
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "elektroodpady (zużyty sprzęt elektryczny i elektroniczny) " "folie" "butelki po alkoholu" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "elektroodpady (zużyty sprzęt elektryczny i elektroniczny) " "inne"
+##   ..$ : chr  "meble" "tekstylia" "butelki po alkoholu" "inne"
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "zużyte opony" "tekstylia" "części samochodowe" "śmieci komunalne/ przydomowe – powstające w codziennym funkcjonowaniu gospodarstwa domowego" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "plastik" "tekstylia" "folie" "szkło " ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "zużyte opony" "części samochodowe" "folie" "plastik" ...
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "meble" "elektroodpady (zużyty sprzęt elektryczny i elektroniczny) " "zużyte opony" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "zużyte opony" "części samochodowe" "folie" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "plastik" "puszki" "butelki po alkoholu" "folie"
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "armatura łazienkowa (umywalka, sedes, wanna)" "elektroodpady (zużyty sprzęt elektryczny i elektroniczny) " "plastik" "folie" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr  "gruz poremontowy, pobudowlany" "armatura łazienkowa (umywalka, sedes, wanna)" "folie" "plastik" ...
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   ..$ : chr 
+##   .. [list output truncated]
+##  $ 18_Opisz_rodzaj_znal             : chr  "Drobne śmieci" "Kosze na śmieci z parku wrzucone do stawu" "" "Butelki plastikowe po wodzie a także butelki po alkoholu. W Lasku przy osiedlu na ulicy Leszczyńskiej." ...
+##  $ 19_Czy_po_raz_pierws             : chr  "Tak" "Nie" "Nie" "Nie" ...
+##  $ 20_Wymyl_swoj_nazw_u             : chr  "Ula Urszula" "" "" "" ...
+##  $ 21_Wpisz_swoj_nazw_u             : chr  "" "Gargl" "Katarzyna Wasilewska" "Ktk" ...
+##  $ 22_Czy_chcesz_powied             : chr  "Nie, na dziś kończymy" "" "" "" ...
+##  $ 5_Tutaj_zlokalizowan.latitude    : chr  "51.758141" "51.758051" "51.775315" "51.703427" ...
+##  $ 5_Tutaj_zlokalizowan.longitude   : chr  "19.474411" "19.474483" "19.535988" "19.478217" ...
+##  $ 5_Tutaj_zlokalizowan.accuracy    : chr  "5" "9" "6" "5" ...
+##  $ 5_Tutaj_zlokalizowan.UTM_Northing: chr  "5735239" "5735229" "5737062" "5729149" ...
+##  $ 5_Tutaj_zlokalizowan.UTM_Easting : chr  "394706" "394711" "398994" "394842" ...
+##  $ 5_Tutaj_zlokalizowan.UTM_Zone    : chr  "34U" "34U" "34U" "34U" ...
+##  $ date_user                        : Date, format: "2022-06-16" "2022-06-16" ...
+##  $ volunteer_id                     : chr  "ula urszula" "gargl" "katarzyna wasilewska" "ktk" ...
+##  $ latitude                         : num  51.8 51.8 51.8 51.7 51.8 ...
+##  $ longitude                        : num  19.5 19.5 19.5 19.5 19.5 ...
+\end{verbatim}
+
+\begin{verbatim}
+##                               ec5_uuid                              title
+## 1 4302357d-bd62-461b-92cc-a9a65b9e7e92                05/05/2022 17:57:13
+## 2 634f32ce-f43b-4409-b81c-5262750e0f44 16/04/2022 12:21:04 sebastian33444
+## 3 7931f210-adf2-11ec-899c-29c766ce896f                27/03/2022 19:24:39
+## 4 c4108f60-ac55-11ec-b78f-9f78d7afe582           25/03/2022 17:11:19 Juha
+## 5 81229fc0-a95f-11ec-8b6c-857d0f1bfcdb                21/03/2022 22:49:31
+## 6 2d9906cf-955e-4181-9e02-b2f0f16afe4b       10/03/2022 12:52:12 Pkrupnik
+##                                           10_Jak_oceniasz_powi
+## 1 większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie
+## 2 większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie
+## 3 większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie
+## 4 większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie
+## 5 większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie
+## 6 większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie
+\end{verbatim}
+
+\begin{verbatim}
+## Simple feature collection with 172 features and 1 field
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 19.37081 ymin: 51.68758 xmax: 19.60378 ymax: 51.82345
+## Geodetic CRS:  WGS 84
+## First 10 features:
+##            volunteer_id                  geometry
+## 1           ula urszula POINT (19.47441 51.75814)
+## 2                 gargl POINT (19.47448 51.75805)
+## 3  katarzyna wasilewska POINT (19.53599 51.77531)
+## 4                   ktk POINT (19.47822 51.70343)
+## 5               bogusia  POINT (19.48184 51.7725)
+## 6                   rmo POINT (19.50163 51.75604)
+## 7                   rmo POINT (19.50874 51.75416)
+## 8                 gargl POINT (19.46672 51.72514)
+## 9        sebastian33444 POINT (19.58445 51.74919)
+## 10                  rmo  POINT (19.4646 51.75279)
+\end{verbatim}
+
+\hypertarget{cechy-dzikich-wysypisk-charakter}{%
+\subsection{Cechy dzikich wysypisk --
+charakter}\label{cechy-dzikich-wysypisk-charakter}}
+
+\includegraphics{data_exploration_files/figure-latex/cechy-charakter-1.pdf}
+
+\hypertarget{inny-jaki-to-charakter-todo}{%
+\subsubsection{Inny -- jaki to charakter?
+TODO}\label{inny-jaki-to-charakter-todo}}
+
+\hypertarget{cechy-dzikich-wysypisk-miejsce}{%
+\subsection{Cechy dzikich wysypisk --
+miejsce}\label{cechy-dzikich-wysypisk-miejsce}}
+
+\includegraphics{data_exploration_files/figure-latex/cechy-miejsce-1.pdf}
+
+\hypertarget{inne-jakie-to-miejsce-todo}{%
+\subsubsection{Inne -- jakie to miejsce?
+TODO}\label{inne-jakie-to-miejsce-todo}}
+
+\hypertarget{charakter-vs.-powierzchnia}{%
+\subsubsection{Charakter
+vs.~powierzchnia}\label{charakter-vs.-powierzchnia}}
+
+Jak\_oceniasz\_powi
+
+Jaki\_jest\_charakt
+
+Total
+
+drobne odpadyrozproszone
+
+inne
+
+kilka stosów
+
+pojedyncze dużegabaryty (np. muszlaklozetowa, lodówka)
+
+zwarty stos odpadów
+
+do 5 metrówkwadratowych (m. kw)- mniejsze niż małypokój
+
+{4}
+
+{2}
+
+{3}
+
+{2}
+
+{5}
+
+{16}
+
+od 51 do 500 m. kw -mieszkanie lubboisko do koszykówki
+
+{6}
+
+{0}
+
+{6}
+
+{1}
+
+{0}
+
+{13}
+
+od 6 do 50 m. kw -pokój lub kilkapokoi
+
+{3}
+
+{3}
+
+{6}
+
+{0}
+
+{2}
+
+{14}
+
+trudno powiedzieć
+
+{0}
+
+{0}
+
+{0}
+
+{1}
+
+{0}
+
+{1}
+
+większe niż 501 m.kw - placDąbrowskiego, boiskopiłkarskie
+
+{0}
+
+{3}
+
+{1}
+
+{1}
+
+{1}
+
+{6}
+
+Total
+
+{13}
+
+{8}
+
+{16}
+
+{5}
+
+{8}
+
+{50}
+
+χ2=28.422 · df=16 · Cramer's V=0.377 · Fisher's p=0.033
+
+\hypertarget{cechy-dzikich-wysypisk-rodzaje-odpaduxf3w}{%
+\subsection{Cechy dzikich wysypisk -- rodzaje
+odpadów}\label{cechy-dzikich-wysypisk-rodzaje-odpaduxf3w}}
+
+\includegraphics{data_exploration_files/figure-latex/cechy-rodzaje-1.pdf}
+
+Pytanie wielokrotnego wyboru, odpowiedzi nie sumują się do 50 wpisów.
+
+\hypertarget{cechy-dzikich-wysypisk-widocznoux15bux107}{%
+\subsection{Cechy dzikich wysypisk --
+widoczność}\label{cechy-dzikich-wysypisk-widocznoux15bux107}}
+
+\includegraphics{data_exploration_files/figure-latex/cechy-widocznosc-1.pdf}
+
+Nikt nie wskazał, że wysypisko jest ``niewidoczne (ukryte)''.
+
+\hypertarget{cechy-dzikich-wysypisk-czas-powstania}{%
+\subsection{Cechy dzikich wysypisk -- czas
+powstania}\label{cechy-dzikich-wysypisk-czas-powstania}}
+
+\includegraphics{data_exploration_files/figure-latex/cechy-czas-1.pdf}
+
+\end{document}

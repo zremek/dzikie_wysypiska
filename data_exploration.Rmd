@@ -3,8 +3,12 @@ title: "Dzikie wysypiska w Łodzi. Wyniki badań"
 author: "Remek"
 date: "`r Sys.Date()`"
 output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: TRUE
+    toc: yes
+  word_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -501,7 +505,16 @@ cechy_tak %>%
   coord_flip()
 ```
 
-### Powierzchnia na mapach TODO
+### Powierzchnia na mapach
+
+```{r powierzchnia-duze-tab}
+str(d)
+d %>% select(ec5_uuid, title, `10_Jak_oceniasz_powi`) %>% 
+  filter(`10_Jak_oceniasz_powi` == "większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie")
+
+punkty_4326
+```
+
 
 ## Cechy dzikich wysypisk -- charakter
 
