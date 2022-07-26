@@ -3,11 +3,7 @@ title: "Dzikie wysypiska w Łodzi. Wyniki badań"
 author: "Remek"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
   html_document:
-    toc: yes
-  word_document:
     toc: yes
 ---
 
@@ -26,10 +22,11 @@ library(units)
 library(kableExtra)
 library(reshape2)
 library(sjPlot)
+library(ggsflabel)
 
 theme_set(theme_minimal())
 
-data_json <- "2022-06-30-form-1__dzikie-wysypiska.json"
+data_json <- "2022-07-26-form-1__dzikie-wysypiska.json"
 
 l <- jsonlite::fromJSON(txt = data_json,
                         flatten = TRUE)
@@ -49,7 +46,7 @@ count_date_user <- d %>% count(date_user)
 n_max <- count_date_user %>% pull(n) %>% max()
 n_sum <- count_date_user %>% pull(n) %>% sum()
 
-date_max <- "2022-06-30"
+date_max <- "2022-07-26"
 
 cpt <- "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl"
 
@@ -93,13 +90,16 @@ count_date_user %>%
 ## Liczba wpisów miesięcznie
 
 ```{r wpis-miesiac}
+
+miesiace_labels <- c("marzec", "kwiecień", "maj", "czerwiec", "lipiec", "sierpień")
+
 count_date_user %>% group_by(month = floor_date(date_user, "month")) %>%
   summarize(n = sum(n)) %>% 
   ggplot(aes(x = as.character(month), y = n)) +
   geom_col(width = 0.1, fill = "seagreen") +
   scale_y_continuous(name = "liczba wpisów") + 
   scale_x_discrete(name = "miesiąc dodania wpisu", 
-                   labels = c("marzec", "kwiecień", "maj", "czerwiec")) +
+                   labels = miesiace_labels) +
   labs(title = 
          "Liczba przesyłanych wpisów jest coraz niższa\nw kolejnych miesiącach realizacji badania", 
        caption = cpt)
@@ -118,7 +118,7 @@ d %>% group_by(volunteer_id) %>%
   geom_col(width = 0.1, fill = "orange") +
   scale_y_continuous(name = "liczba dołączających osób") + 
   scale_x_discrete(name = "miesiąc dołączenia pierwszego wpisu", 
-                   labels = c("marzec", "kwiecień", "maj", "czerwiec")) +
+                   labels = miesiace_labels) +
   labs(title = 
          "Liczba dołączających osób jest coraz niższa
 w kolejnych miesiącach realizacji badania", 
@@ -129,11 +129,9 @@ caption = cpt)
 
 ## Aktywność ochotników / ochotniczek
 
-Wszystkie nazwy ochotników ujednoliciłem do małych liter. Usunąłem spacje na początku i na końcu nazw. To pozwoliło liczyć nazwy wpisane np. "sebastian33444" i "Sebastian33444" jako to samo. 
+Wszystkie nazwy ochotników ujednoliciłem do małych liter. Usunąłem spacje na początku i na końcu nazw. To pozwoliło liczyć nazwy wpisane np. "sebastian33444" i "Sebastian33444" jako to samo.
 
-
-Nazwy moje (Remka) są dwie: Rmo i Uffo7. Wcześniej korzystałem z Uffo7, potem na potrzeby nagrywania instrukcji wymyśliłem inną nazwę aby pokazać w formularzu ścieżkę przesyłania wpisu po raz pierwszy. 
-
+Nazwy moje (Remka) są dwie: Rmo i Uffo7. Wcześniej korzystałem z Uffo7, potem na potrzeby nagrywania instrukcji wymyśliłem inną nazwę aby pokazać w formularzu ścieżkę przesyłania wpisu po raz pierwszy.
 
 ### Ilość wpisów na konkretnego ochotnika
 
@@ -144,9 +142,9 @@ d %>% count(volunteer_id) %>% arrange(-n) %>%
   kable_minimal(full_width = FALSE)
 ```
 
-### Ile osób zrobiło jeden wpis? Ile więcej? 
+### Ile osób zrobiło jeden wpis? Ile więcej?
 
-Mamy dużo osób, które zrobiły mało wpisów, a mało takich które zrobiły dużo. 
+Mamy dużo osób, które zrobiły mało wpisów, a mało takich które zrobiły dużo.
 
 To jest też typowe np. w użytkowaniu mediów społecznościowych (mało osób ma wysoką aktywność a dużą ma małą).
 
@@ -162,9 +160,9 @@ d %>% count(volunteer_id) %>% count(n) %>%
 
 ### Ilość wpisów a długość zaangażowania w projekt
 
-Zobaczymy jeszcze, czy ilość wpisów jest powiązana z tym, jak długo ochotnik jest z nami. Biorę datę zatwierdzaną przez ochotnika. 
+Zobaczymy jeszcze, czy ilość wpisów jest powiązana z tym, jak długo ochotnik jest z nami. Biorę datę zatwierdzaną przez ochotnika.
 
-Liczę różnicę dat jako ostatnia_data - pierwsza_data + 1. Czyli 1 dzień oznacza, że ochotnik przesłał wpisy tylko jednego dnia. 
+Liczę różnicę dat jako ostatnia_data - pierwsza_data + 1. Czyli 1 dzień oznacza, że ochotnik przesłał wpisy tylko jednego dnia.
 
 ```{r liczba-wpis-a-czas-tab}
 as_num_difftime <- function(end, beginning) {
@@ -183,8 +181,7 @@ volunt_difftime %>%
   kbl() %>% kable_minimal(full_width = FALSE)
 ```
 
-
-Na wykresie trochę widać zależność monotoniczną -- jak rośnie jedno to drugie też. Jest przy tym dużo pojedynczych wpisów. 
+Na wykresie trochę widać zależność monotoniczną -- jak rośnie jedno to drugie też. Jest przy tym dużo pojedynczych wpisów.
 
 ```{r liczba-wpis-a-czas-wykres}
 
@@ -200,13 +197,11 @@ pvd
 
 ```
 
-
 Skala logarytmiczna żeby "rozgciągnąć" niskie wartości, których jest większość:
 
 ```{r liczba-wpis-a-czas-log}
 pvd + scale_x_log10() + scale_y_log10()
 ```
-
 
 Zobaczmy to z trendem i nazwami ochotników:
 
@@ -214,7 +209,6 @@ Zobaczmy to z trendem i nazwami ochotników:
 pvd + geom_text(check_overlap = TRUE) + scale_x_log10() + scale_y_log10() +
   geom_smooth()
 ```
-
 
 Zobaczmy to samo ale tylko dla tych, co mają więcej, niż 1 wpis:
 
@@ -233,8 +227,7 @@ pvd_1 + geom_text(check_overlap = TRUE) + scale_x_log10() + scale_y_log10() +
   geom_smooth()
 ```
 
-
-Ci co są dłużej niż 10 dni mają więcej wpisów? 
+Ci co są dłużej niż 10 dni mają więcej wpisów?
 
 ```{r liczba-czas-10}
 volunt_difftime %>% ggplot(aes(x = pierwszy_ostatni_wpis_ile_dni > 10,
@@ -242,14 +235,12 @@ volunt_difftime %>% ggplot(aes(x = pierwszy_ostatni_wpis_ile_dni > 10,
   geom_boxplot()
 ```
 
-
-To są nierówne grupy. Tych, co są dłużej mamy znacznie mniej. 
+To są nierówne grupy. Tych, co są dłużej mamy znacznie mniej.
 
 ```{r tab-dni}
 table(volunt_difftime$pierwszy_ostatni_wpis_ile_dni > 10,
       dnn = "pierwszy_ostatni_wpis_ile_dni > 10")
 ```
-
 
 ```{r liczba-a-czas-corr}
 liczba_a_czas_corr_spe <- cor.test(volunt_difftime$pierwszy_ostatni_wpis_ile_dni,
@@ -261,8 +252,7 @@ liczba_a_czas_corr_spe
 
 Korelacja wychodzi `r liczba_a_czas_corr_spe$estimate` czyli tak, im dłużej ochotnik jest z nami tym ma więcej wpisów.
 
-
-Może najsensowniej byłoby to policzyć tylko dla osób, mających więcej, niż 1 wpis bo takie z 1 wpisem mają zawsze 1 dzień? 
+Może najsensowniej byłoby to policzyć tylko dla osób, mających więcej, niż 1 wpis bo takie z 1 wpisem mają zawsze 1 dzień?
 
 ```{r corr-over-1}
 
@@ -270,11 +260,11 @@ cor.test(volunt_difftime_1$pierwszy_ostatni_wpis_ile_dni,
          volunt_difftime_1$liczba_wpis, method = "spearman")
 ```
 
-Tutaj **współczynnik jest niższy**, niż kiedy braliśmy wszystkich. 
+Tutaj **współczynnik jest niższy**, niż kiedy braliśmy wszystkich.
 
 ## Rozmieszczenie -- mapa
 
-```{r rozmieszczenie-mapa, cache=TRUE}
+```{r rozmieszczenie-mapa, cache=TRUE, cache.extra = Sys.Date()}
 shp <- sf::st_read(dsn = ".",layer = "Jednostki_ewidencyjne", 
                    quiet = TRUE)
 
@@ -317,7 +307,8 @@ dzielnice_4326 <- st_transform(lodz_dzielnice %>%
 
 punkty_4326 <- st_as_sf(x = d %>% 
                           filter(!is.na(longitude)) %>% 
-                          select(volunteer_id, longitude, latitude),
+                          select(ec5_uuid, title, 
+                                 volunteer_id, longitude, latitude),
                  coords = c("longitude", "latitude"),
                  crs = st_crs(dzielnice_4326))
 
@@ -422,7 +413,7 @@ d_cechy %>% count(Czy_chcesz_nam_pow) %>%
 
 O ile nie wskazano inaczej, **cechy wysypisk dotyczą `r podano_cechy[2]` wpisów**.
 
-### Ilość informacji vs. uczestnik TODO
+### Ilość informacji vs. uczestnik
 
 Czy podanie informacji o wysypisku zależy od tego, kto robi wpis? Czy zależy od tego, który jest to kolejny wpis?
 
@@ -439,9 +430,9 @@ info_uczestnik %>% ggplot(aes(x = fct_reorder(.f = volunteer_id,
   coord_flip()
 ```
 
-Są osoby zawsze wpisujące informacje, są takie, które tego nie robią. Jak to wyjaśnić? Nie wiem, czy mamy coś sensownego w danych na ten temat. 
+Są osoby zawsze wpisujące informacje, są takie, które tego nie robią. Jak to wyjaśnić? Nie wiem, czy mamy coś sensownego w danych na ten temat.
 
-Może sama liczba wpisów? 
+Może sama liczba wpisów?
 
 ```{r liczba-wpis-a-info}
 info_uczestnik_wide <- info_uczestnik %>% 
@@ -457,8 +448,7 @@ info_uczestnik_wide %>% ggplot(aes(x = liczba_wpis_sum,
 
 ```
 
-
-Nie widzę zależności. 
+Nie widzę zależności.
 
 ```{r liczba-wpis-info-boxpl}
 info_uczestnik_wide %>% ggplot(aes(y = liczba_wpis_sum, 
@@ -466,10 +456,9 @@ info_uczestnik_wide %>% ggplot(aes(y = liczba_wpis_sum,
   geom_boxplot()
 ```
 
+Też nic nie widać.
 
-Też nic nie widać. 
-
-Jeszcze zobaczymy frakcję "tak" w zależności od pogrupowanej liczby wpisów 
+Jeszcze zobaczymy frakcję "tak" w zależności od pogrupowanej liczby wpisów
 
 ```{r frc-tak-liczba-wpis}
 
@@ -485,9 +474,9 @@ info_uczestnik_wide %>%
   
 ```
 
-Nie widzę zależności i jest to mało intuicyjne. 
+Nie widzę zależności i jest to mało intuicyjne.
 
-TODO - potraktować wpisy jako sekwencję po dacie, pierwszy, drugi itp. spróbować na tym to sprawdzić 
+TODO - potraktować wpisy jako sekwencję po dacie, pierwszy, drugi itp. spróbować na tym to sprawdzić
 
 ## Cechy dzikich wysypisk -- powierzchnia
 
@@ -499,21 +488,87 @@ cechy_tak %>%
   ggplot(aes(x = fct_rev(fct_infreq(Jak_oceniasz_powi)))) + 
   geom_bar(alpha = 0.6) + 
   labs(title = "Częściej zgłaszano małe wysypiska",
-       y = "liczba wpisów", x = "ocena powierzchni wysypiska", 
+       y = paste0("liczba wpisów [n = ", podano_cechy[2], "]"),
+       x = "ocena powierzchni wysypiska", 
        caption = cpt) + 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 35)) +
   coord_flip()
 ```
 
-### Powierzchnia na mapach
+### Powierzchnia na mapach TODO
+
+Najpierw zajmiemy się kategorią najbardziej problematyczną, "większe niż 501 mkw" 
 
 ```{r powierzchnia-duze-tab}
-str(d)
-d %>% select(ec5_uuid, title, `10_Jak_oceniasz_powi`) %>% 
-  filter(`10_Jak_oceniasz_powi` == "większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie")
+# str(d)
+mkw501_string <- "większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarskie"
 
-punkty_4326
+mkw501 <- d %>% select(ec5_uuid, title,
+                       volunteer_id,
+                       `10_Jak_oceniasz_powi`, 
+                       longitude) %>% 
+  filter(`10_Jak_oceniasz_powi` == mkw501_string) 
+
+mkw501 %>% select(-ec5_uuid) %>% 
+  kbl() %>%
+  kable_minimal(full_width = FALSE)
+
+# punkty_4326
 ```
+
+Mamy `r dim(mkw501)[1]` wpisów w tej kategorii o największej powierzchni. Geolokalizację mają `r sum(!is.na(mkw501$longitude))` punkty. Zobaczmy je na mapie:
+
+```{r 501mkw-map}
+
+punkty_4326_cechy_tak <- left_join(punkty_4326, 
+                                   cechy_tak %>% 
+                                     rename(ec5_uuid = ecuuid), 
+                                   by = "ec5_uuid")
+
+punkty_4326_cechy_tak_mkw501 <- punkty_4326_cechy_tak %>% 
+  filter(Jak_oceniasz_powi == mkw501_string)
+
+ggplot() + 
+  geom_sf(data = dzielnice_4326, aes(fill = dzielnica), 
+          alpha = 0.5, colour = NA) +
+  geom_sf(data = punkty_4326_cechy_tak_mkw501,
+          alpha = 0.5, size = 3) + 
+   geom_sf_label_repel(data = punkty_4326_cechy_tak_mkw501, 
+                 aes(label = title)) +
+  coord_sf(datum = NA,
+           xlim = c(19.33, 19.63), 
+           ylim = c(51.69, 51.855)) + 
+  scale_fill_manual(values = manual_fill) +
+  guides(fill = "none") 
+```
+
+Zobaczmy sobie jakie zdjęcia zostały zrobione:
+
+![10/03/2022 12:52:12 Pkrupnik - zdjęcie 1.](photos/d1_2d9906cf-955e-4181-9e02-b2f0f16afe4b.jpg)
+
+![10/03/2022 12:52:12 Pkrupnik - zdjęcie 2.](photos/d2_2d9906cf-955e-4181-9e02-b2f0f16afe4b.jpg)
+
+![10/03/2022 12:52:12 Pkrupnik - zdjęcie 3.](photos/d3_2d9906cf-955e-4181-9e02-b2f0f16afe4b.jpg)
+
+![10/03/2022 12:52:12 Pkrupnik - zdjęcie 4.](photos/d4_2d9906cf-955e-4181-9e02-b2f0f16afe4b.jpg)
+
+![25/03/2022 17:11:19 Juha - zdjęcie 1.](photos/d1_c4108f60-ac55-11ec-b78f-9f78d7afe582.jpg)
+
+![25/03/2022 17:11:19 Juha - zdjęcie 2.](photos/d2_c4108f60-ac55-11ec-b78f-9f78d7afe582.jpg)
+
+![25/03/2022 17:11:19 Juha - zdjęcie 3.](photos/d3_c4108f60-ac55-11ec-b78f-9f78d7afe582.jpg)
+
+![25/03/2022 17:11:19 Juha - zdjęcie 4.](photos/d4_c4108f60-ac55-11ec-b78f-9f78d7afe582.jpg)
+
+![16/04/2022 12:21:04 sebastian33444 - zdjęcie 1.](photos/d1_634f32ce-f43b-4409-b81c-5262750e0f44.jpg)
+
+![05/05/2022 17:57:13 - zdjęcie 1.](photos/d1_4302357d-bd62-461b-92cc-a9a65b9e7e92.jpg)
+
+![05/05/2022 17:57:13 - zdjęcie 2.](photos/d2_4302357d-bd62-461b-92cc-a9a65b9e7e92.jpg)
+
+![05/05/2022 17:57:13 - zdjęcie 3.](photos/d3_4302357d-bd62-461b-92cc-a9a65b9e7e92.jpg)
+
+To ostatnie to wpis mój (Remka) - nick rmo. 
 
 
 ## Cechy dzikich wysypisk -- charakter
@@ -523,7 +578,8 @@ cechy_tak %>%
   ggplot(aes(x = fct_rev(fct_infreq(Jaki_jest_charakt)))) + 
   geom_bar(alpha = 0.6) + 
   labs(title = '"Kilka stosów" to najczęściej\nwskazywany charakter',
-       y = "liczba wpisów", x = "charakter wysypiska", 
+       y = paste0("liczba wpisów [n = ", podano_cechy[2], "]"),
+       x = "charakter wysypiska", 
        caption = cpt) + 
     scale_x_discrete(labels = function(x) str_wrap(x, width = 35)) +
   coord_flip()
@@ -538,7 +594,8 @@ cechy_tak %>%
   ggplot(aes(x = fct_rev(fct_infreq(W_jakim_miejscu_j)))) + 
   geom_bar(alpha = 0.6) + 
   labs(title = "",
-       y = "liczba wpisów", x = "miejsce wysypiska", 
+       y = paste0("liczba wpisów [n = ", podano_cechy[2], "]"),
+       x = "miejsce wysypiska", 
        caption = cpt) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 45)) +
   coord_flip()
@@ -546,11 +603,13 @@ cechy_tak %>%
 # uwaga od Oli-geografki: teren zieleni, a nie zielony 
 ```
 
+Na marginesie dowiedziałem się od mojej żony Oli, że w geografii poprawnie jest teren *zieleni*, a nie zielony.
+
 ### Inne -- jakie to miejsce? TODO
 
 ### Charakter vs. powierzchnia
 
-```{r charakter-powierzchnia}
+```{r charakter-powierzchnia-tab}
 # 
 # table(cechy_tak$Jak_oceniasz_powi,
 #       cechy_tak$Jaki_jest_charakt) %>%
@@ -562,11 +621,27 @@ cechy_tak %>%
 # cechy_tak %>% ggplot(aes(x = Jak_oceniasz_powi, y = Jaki_jest_charakt)) + 
 #   geom_count()
 
-sjPlot::tab_xtab(var.row = cechy_tak$Jak_oceniasz_powi,
-                 var.col = cechy_tak$Jaki_jest_charakt)
+sjPlot::tab_xtab(var.row = cechy_tak$Jaki_jest_charakt,
+                 var.col = cechy_tak$Jak_oceniasz_powi)
 
 ```
 
+Wyróżnia się to, że "zwarty stos odpadów" występuje przy powierzchni "do 5 mkw". Mamy 9 takich wpisów. "Kilka stosów" to najczęściej "6 do 50 mkw" lub "51 do 500 mkw", mamy po 7 takich wpisów. 
+
+Widać też, że przy "drobnych odpadach rozproszonych" nie było wskazań na największą powierzchnię "większe niż 501 mkw". 
+
+```{r charakter-powierzchnia-plot}
+cechy_tak %>% ggplot(aes(x = Jak_oceniasz_powi, 
+                         fill = Jaki_jest_charakt)) + 
+  geom_bar(position = "dodge") + 
+  scale_y_continuous(breaks = 0:20) + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 25)) +
+  scale_fill_discrete(labels = function(x) str_wrap(x, width = 15)) +
+  theme(legend.position = "bottom") +
+  coord_flip()
+```
+
+Wykres pokazuje te same liczby. Ogólnie jest dość duża zmienność. 
 
 ## Cechy dzikich wysypisk -- rodzaje odpadów
 
@@ -585,9 +660,12 @@ rodzaje_wide <- bind_rows(lapply(cechy_tak$Jakie_rodzaje_odp,
 rodzaje_long %>% 
   ggplot(aes(x = fct_rev(fct_infreq(value)))) + 
   geom_bar(alpha = 0.6) + 
-  geom_hline(yintercept = 25, colour = "blue", lty = 2, alpha = 0.4) +
-  annotate("text", x = 5, y = 24, label = "połowa wpisów = 25", colour = "blue") +
-  labs(y = "liczba wskazań", x = "rodzaje odpadów") + 
+  geom_hline(yintercept = podano_cechy[2] / 2,
+             colour = "blue", lty = 2, alpha = 0.4) +
+  annotate("text", x = 5, y = podano_cechy[2] / 2,
+           label = "połowa wpisów", colour = "blue") +
+  labs(y = paste0("liczba wpisów [n = ", podano_cechy[2], "]"),
+       x = "rodzaje odpadów") + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 50)) +
   theme_minimal(base_size = 12) +
   coord_flip()
@@ -605,12 +683,22 @@ cechy_tak %>%
        y = "liczba wpisów", x = "widoczność wysypiska", 
        caption = cpt) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 35)) +
-  geom_hline(yintercept = 25, colour = "blue", lty = 2, alpha = 0.4) +
-  annotate("text", x = 1, y = 24, label = "połowa wpisów = 25", colour = "blue") +
+  geom_hline(yintercept = podano_cechy[2] / 2,
+             colour = "blue", lty = 2, alpha = 0.4) +
+  annotate("text", x = 1.5, y = podano_cechy[2] / 2,
+           label = "połowa wpisów", colour = "blue") +
   coord_flip()
 ```
 
-Nikt nie wskazał, że wysypisko jest "niewidoczne (ukryte)".
+Dopiero w lipcu pojawiło się wskazanie, że wysypisko jest "niewidoczne (ukryte)".
+
+```{r ukryte}
+d %>% select(title, volunteer_id, `16_Czy_znalezione_wy`) %>% 
+  filter(`16_Czy_znalezione_wy` == "Niewidoczne (ukryte)") %>% 
+  kbl() %>%
+  kable_minimal(full_width = FALSE)
+```
+
 
 ## Cechy dzikich wysypisk -- czas powstania
 
@@ -618,7 +706,7 @@ Nikt nie wskazał, że wysypisko jest "niewidoczne (ukryte)".
 cechy_tak %>% 
   ggplot(aes(x = fct_rev(fct_infreq(Czy_moesz_oceni_c)))) + 
   geom_bar(alpha = 0.6) + 
-  labs(title = "Najrzadziej wskazywano wysypiska\npowstałe w ostatnich dniach",
+  labs(
        y = "liczba wpisów", x = "ocena czasu powstania wysypiska", 
        caption = cpt) + 
    scale_x_discrete(labels = function(x) str_wrap(x, width = 35)) +

@@ -1,7 +1,9 @@
-install.packages("webshot")
-webshot::install_phantomjs()
+# install.packages("webshot")
+# webshot::install_phantomjs()
 
 library(webshot)
 library(rmarkdown)
 
-rmdshot("slajdy_fgi_15_lipca.Rmd", "slajdy_fgi_15_lipca.pdf")
+rmdshot("data_exploration.Rmd", "data_exploration.pdf")
+
+# efekt słaby - jedna, długa strona pdf. wydruk z firefoxa lepszy
