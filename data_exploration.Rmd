@@ -26,9 +26,9 @@ library(ggsflabel)
 
 theme_set(theme_minimal())
 
-data_json <- "2022-08-16-form-1__dzikie-wysypiska.json"
+data_json <- "2022-08-31-form-1__dzikie-wysypiska.json"
 
-date_max <- "2022-07-31"
+date_max <- "2022-08-31"
 
 l <- jsonlite::fromJSON(txt = data_json,
                         flatten = TRUE)
@@ -60,7 +60,7 @@ podano_cechy <- d_cechy %>% count(Czy_chcesz_nam_pow) %>% pull(n)
 
 ## Wyniki w zakresie
 
--   Liczby wpisów na mapę dzikich wysypisk: **`r n_sum` wpisy**
+-   Liczby wpisów na mapę dzikich wysypisk: **`r n_sum` wpisów**
 -   Liczby ochotniczek / ochotników wysyłających wpisy: **`r d %>% count(volunteer_id) %>% pull(n) %>% length()` osoby**
 -   Rozmieszczenia dzikich wysypisk: **najwięcej wpisów z Widzewa, najbardziej zaśmiecone Śródmieście**
 -   Cech dzikich wysypisk: znamy je dla **`r round(podano_cechy[2] / sum(podano_cechy) * 100)`%** wpisów (`r podano_cechy[2]` z `r sum(podano_cechy)`).
@@ -83,7 +83,7 @@ count_date_user %>%
                          date_max, 
                          " przesłaliście nam ",
                          n_sum, 
-                         " wpisy, dziękujemy!"), 
+                         " wpisów, dziękujemy!"), 
        caption = cpt)
 ```
 
@@ -197,7 +197,7 @@ pvd
 
 ```
 
-Skala logarytmiczna żeby "rozgciągnąć" niskie wartości, których jest większość:
+Skala logarytmiczna żeby "rozciągnąć" niskie wartości, których jest większość:
 
 ```{r liczba-wpis-a-czas-log}
 pvd + scale_x_log10() + scale_y_log10()
@@ -264,7 +264,7 @@ Tutaj **współczynnik jest niższy**, niż kiedy braliśmy wszystkich.
 
 ## Rozmieszczenie -- mapa
 
-```{r rozmieszczenie-mapa, cache=FALSE, cache.extra = Sys.Date()}
+```{r rozmieszczenie-mapa, cache=TRUE, cache.extra = Sys.Date()}
 shp <- sf::st_read(dsn = ".",layer = "Jednostki_ewidencyjne", 
                    quiet = TRUE)
 
@@ -427,6 +427,12 @@ info_uczestnik %>% ggplot(aes(x = fct_reorder(.f = volunteer_id,
                    y = liczba_wpis,
                    fill = `9_Czy_chcesz_nam_pow`)) +
   geom_col() + 
+  theme(legend.position = "bottom") +
+  scale_fill_discrete(name = "Czy podano informacje o wysypisku?") + 
+  labs( 
+       caption = cpt, 
+       x = "nazwy uczestniczek / uczestników", 
+       y = "liczba wpisów") +
   coord_flip()
 ```
 
@@ -506,7 +512,7 @@ mkw501_string <- "większe niż 501 m. kw - plac Dąbrowskiego, boisko piłkarsk
 mkw501 <- d %>% select(ec5_uuid, title,
                        volunteer_id,
                        `10_Jak_oceniasz_powi`, 
-                       longitude) %>% 
+                       longitude, latitude) %>% 
   filter(`10_Jak_oceniasz_powi` == mkw501_string) 
 
 mkw501 %>% select(-ec5_uuid) %>% 
@@ -543,6 +549,9 @@ ggplot() +
   guides(fill = "none") 
 ```
 
+TODO: pokazać każdy punkt z bliska wraz z ulicami i ich nazwami
+
+
 Zobaczmy sobie jakie zdjęcia zostały zrobione:
 
 ![10/03/2022 12:52:12 Pkrupnik - zdjęcie 1.](photos/d1_2d9906cf-955e-4181-9e02-b2f0f16afe4b.jpg)
@@ -562,6 +571,9 @@ Zobaczmy sobie jakie zdjęcia zostały zrobione:
 ![25/03/2022 17:11:19 Juha - zdjęcie 4.](photos/d4_c4108f60-ac55-11ec-b78f-9f78d7afe582.jpg)
 
 ![16/04/2022 12:21:04 sebastian33444 - zdjęcie 1.](photos/d1_634f32ce-f43b-4409-b81c-5262750e0f44.jpg)
+
+To zdjęcie jest „puste”, zastąpione grafiką z logo E5. Powstaje to kiedy osoba zrobiła zdjęcie ale nie wysłała go na serwer E5.
+
 
 ![05/05/2022 17:57:13 - zdjęcie 1.](photos/d1_4302357d-bd62-461b-92cc-a9a65b9e7e92.jpg)
 
@@ -634,11 +646,16 @@ Widać też, że przy "drobnych odpadach rozproszonych" nie było wskazań na na
 ```{r charakter-powierzchnia-plot}
 cechy_tak %>% ggplot(aes(x = Jak_oceniasz_powi, 
                          fill = Jaki_jest_charakt)) + 
-  geom_bar(position = "dodge") + 
+  geom_bar(position = "dodge", colour = "white") + 
   scale_y_continuous(breaks = 0:20) + 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 25)) +
-  scale_fill_discrete(labels = function(x) str_wrap(x, width = 15)) +
+  scale_fill_discrete(labels = function(x) str_wrap(x, width = 10), 
+                      name = "charakter\nwysypiska") +
   theme(legend.position = "bottom") +
+  labs( 
+       caption = cpt, 
+       x = "ocena powierzchni dzikiego wysypiska", 
+       y = paste0("liczba wpisów [n = ", podano_cechy[2], "]")) +
   coord_flip()
 ```
 
