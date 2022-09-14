@@ -56,12 +56,20 @@ d_cechy <- d[, c(1, 12:21)]
 d_cechy <- rename_with(d_cechy, ~str_remove_all(., "\\d+_"))
 
 podano_cechy <- d_cechy %>% count(Czy_chcesz_nam_pow) %>% pull(n)
+
+# sum of photos
+
+n_zdjec <- d %>% select(5:8) %>%
+  mutate(across(.cols = everything(), .fns = ~ str_starts(.x, "https"))) %>%
+  mutate(ile = rowSums(.)) %>% pull(ile) %>% sum()
+
 ```
 
 ## Wyniki w zakresie
 
 -   Liczby wpisów na mapę dzikich wysypisk: **`r n_sum` wpisów**
 -   Liczby ochotniczek / ochotników wysyłających wpisy: **`r d %>% count(volunteer_id) %>% pull(n) %>% length()` osoby**
+-   Liczby przesłanych zdjęć: w sumie **`r n_zdjec`** w sumie (niektóre "puste")
 -   Rozmieszczenia dzikich wysypisk: **najwięcej wpisów z Widzewa, najbardziej zaśmiecone Śródmieście**
 -   Cech dzikich wysypisk: znamy je dla **`r round(podano_cechy[2] / sum(podano_cechy) * 100)`%** wpisów (`r podano_cechy[2]` z `r sum(podano_cechy)`).
 
@@ -87,6 +95,24 @@ count_date_user %>%
        caption = cpt)
 ```
 
+```{r gorka-data}
+
+gorka <- count_date_user %>% arrange(-n) %>% head(1) %>% pull(date_user)
+
+```
+
+
+Górka 12 wpisów jest z dnia `r gorka`
+`
+
+```{r gorka-12-wpis}
+
+d %>% count(date_user, volunteer_id) %>% 
+  filter(date_user == gorka)
+
+```
+
+
 ## Liczba wpisów miesięcznie
 
 ```{r wpis-miesiac}
@@ -105,6 +131,8 @@ count_date_user %>% group_by(month = floor_date(date_user, "month")) %>%
        caption = cpt)
 
 ```
+## TODO Liczba zdjęć w czasie i na ochotnika?
+
 
 ## Liczba ochotniczek / ochotników w czasie
 
@@ -341,7 +369,11 @@ ggplot() +
            xlim = c(19.33, 19.63), 
            ylim = c(51.69, 51.855)) + 
   scale_fill_manual(values = manual_fill) +
-  guides(fill = "none") 
+  guides(fill = "none") +
+  labs(title = "Lokalizacja dzikich wysypisk śmieci w Łodzi i okolicach", 
+subtitle = 
+  paste0("Jeden punkt na mapie oznacza jeden wpis", "\nstan na ", date_max), 
+caption = "Źródło: badania własne\ndzikiewysypiska.uni.lodz.pl")
 
 ```
 
@@ -706,6 +738,7 @@ cechy_tak %>%
   annotate("text", x = 1.5, y = podano_cechy[2] / 2,
            label = "połowa wpisów", colour = "blue") +
   coord_flip()
+
 ```
 
 Dopiero w lipcu pojawiło się wskazanie, że wysypisko jest "niewidoczne (ukryte)".
