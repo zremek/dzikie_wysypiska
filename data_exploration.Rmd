@@ -388,10 +388,13 @@ Jeden punkt na mapie oznacza jeden wpis. Łącznie `r punkty_n_total` punkty, `r
 # zrobić słupkowy flip z podziałem na dzielnice
 # i dodać słup "brak współrzędnych wpisu", "punkt poza granicami m. Łodzi"
 
-punkty_dzielnice %>% count(dzielnica) %>% tibble() %>% select(-geometry) %>% 
+punkty_dzielnice_gg <- punkty_dzielnice %>% 
+  count(dzielnica) %>% tibble() %>% select(-geometry) %>% 
   add_case(dzielnica = c("brak współrzędnych wpisu",
                          "punkt poza granicami Łodzi"),
-           n = c(wpisy_bez_punktu_n, punkty_poza_lodzia_n)) %>% 
+           n = c(wpisy_bez_punktu_n, punkty_poza_lodzia_n))
+
+punkty_dzielnice_gg %>% 
   mutate(dzielnica = fct_reorder(dzielnica, n, max)) %>% 
   ggplot(aes(x = dzielnica, 
              y = n, fill = dzielnica)) + 
