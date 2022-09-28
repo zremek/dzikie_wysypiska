@@ -81,10 +81,11 @@ rodzaje_long_en %>%
   geom_hline(yintercept = podano_cechy[2] / 2,
              colour = "blue", lty = 2, alpha = 0.4) +
   annotate("text", x = 5, y = podano_cechy[2] / 2,
-           label = "połowa wpisów", colour = "blue") +
-  labs(y = paste0("liczba wpisów [n = ", podano_cechy[2], "]"),
-       x = "rodzaje odpadów") + 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 50)) +
+           label = "half of the records", colour = "blue") +
+  labs(y = paste0("records count [n = ", podano_cechy[2], "]"),
+       x = "garbage type [multiple choice question]") + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 30)) +
   theme_minimal(base_size = 12) +
   coord_flip()
 
+ggsave("garb_type.png", width = 15, height = 13, units = "cm")
