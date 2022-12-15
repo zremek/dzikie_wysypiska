@@ -73,8 +73,11 @@ e5_data_dictionary_pl$var_labels_pl[41:55] <- c(
 
 
 
-write_xlsx(list(d_clean = d_clean, e5_data_dictionary_pl = e5_data_dictionary_pl),
-           "e5_data_clean.xlsx")
+# write_xlsx(list(d_clean = d_clean, e5_data_dictionary_pl = e5_data_dictionary_pl),
+#            "e5_data_clean.xlsx")
+
+# write_csv(d_clean, "e5_data_clean.csv") 
+# for kepler.gl test
 
 # w samym excelu przygotować oglądanie zdjęć w komórkach 
 # https://www.extendoffice.com/documents/excel/4212-excel-insert-image-from-url.html
