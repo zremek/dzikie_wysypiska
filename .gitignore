@@ -1,12 +1,13 @@
 .Rproj.user
 .Rhistory
-.RData
+*.RData
 .Ruserdata
 photos/
 *.json
 *.xlsx
 *.csv
 *.jpg
+*.png
 goggle_maps_reg.R
 slajdy_fgi_15_lipca_cache/
 slajdy_fgi_15_lipca_files/
