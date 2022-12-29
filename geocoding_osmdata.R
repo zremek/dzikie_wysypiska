@@ -76,7 +76,7 @@ geocoded <-
 
 geocoded <- 
   add_case(geocoded, 
-           ecuuid = pull(no_loc[2, 2]), 
+           ecuuid = pull(no_loc[2, 1]), 
            latitude = 51.704266, 
            longitude = 19.470457)
 
@@ -166,7 +166,7 @@ geocoded <-
 
 # case 8. plac Reymonta, dawne kino Rekord
 
-browseURL(pull(no_loc[8, 9]))
+browseURL(pull(no_loc[8, 5]))
 
 # http://www.polskaniezwykla.pl/web/place/47181,lodz-budynek-dawnego-kina-rekord.html
 # https://literacka.lodz.pl/tropem-fabuly/punkty/info/180 
@@ -184,7 +184,7 @@ geocoded <- add_case(
 
 # case 9. ul. Dąbrowskiego, teren dawnej zajezdni MPK #######
 
-browseURL(pull(no_loc[9, 9]))
+browseURL(pull(no_loc[9, 6]))
 
 # kierując się zdjęciem z rurami wybieram punkt blisko działek
 # https://goo.gl/maps/sF4GH9UgdwGXgGtu8 
@@ -198,9 +198,9 @@ geocoded <-
     longitude = 19.475741
   )
 
-# case 10. darkerone bez komentarzy 
+# case 10. darkerone bez komentarzy ##########
 
-browseURL(pull(no_loc[10, 6]))
+browseURL(pull(no_loc[10, 5]))
 
 # brak wskazówek w jednynym zdjęciu 
 
@@ -217,9 +217,48 @@ sapply(dko$photo_4, browseURL)
 # czyli 1b588313-980f-48a9-abda-846a5df9a3ce
 # ponieważ zdjęcia wpisy zostały przesłane w odstępie 
 
+f <- "214b73fc-99cf-48a5-a64b-f56b9a240557"
+s <- "1b588313-980f-48a9-abda-846a5df9a3ce"
 
+ft <- d_clean %>% filter(ecuuid == f) %>% select(uploaded_at) %>% pull()
+st <- d_clean %>% filter(ecuuid == s) %>% select(uploaded_at) %>% pull()
 
+difftime(st, ft)
 
+# w odstępie niecałych trzech minut 
+# jednak się waham, bo na street view nie widać budynków jak na zdjęciu f
+# miejsce s jest przy torach tramwajowych
+# poszukałem miejsca ze zdjęcia f na street view pozostałych miejsc darkerone
+# nie widzę żadnej wskazówki
+# to jakieś inne miejsce w okolicy
+# czy iść w teren? 
 
+# case 11. przy dawnym Tesco na ulicy Franciszkańsk ######
+
+browseURL(pull(no_loc[11, 6]))
+
+# skwerek przy Franciszkańskiej 31A
+# https://goo.gl/maps/BScWb6LZ4HnSn1V56
+# 51.784140, 19.460951
+
+geocoded <- add_case(
+  geocoded, 
+  ecuuid = pull(no_loc[11, 1]),
+  latitude = 51.784140, 
+  longitude = 19.460951
+)
+
+# case 12. Hanuszkiewicza 100 m do Brzezińskiej #######
+
+browseURL(pull(no_loc[12, 6]))
+# https://goo.gl/maps/bjGMmHpYhay8MHDQ8
+# 51.799015, 19.557424 
+
+geocoded <- add_case(
+  geocoded, 
+  ecuuid = pull(no_loc[12, 1]), 
+  latitude = 51.799015, 
+  longitude = 19.557424
+)
 
 
