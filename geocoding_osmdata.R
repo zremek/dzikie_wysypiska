@@ -233,6 +233,16 @@ difftime(st, ft)
 # to jakieś inne miejsce w okolicy
 # czy iść w teren? 
 
+# wizyta w terenie 29.12. wskazuje na okolicę
+# 51.779663, 19.505233
+
+geocoded <- add_case(
+  geocoded, 
+  ecuuid = pull(no_loc[10, 1]),
+  latitude = 51.779663, 
+  longitude = 19.505233
+)
+
 # case 11. przy dawnym Tesco na ulicy Franciszkańsk ######
 
 browseURL(pull(no_loc[11, 6]))
@@ -261,4 +271,18 @@ geocoded <- add_case(
   longitude = 19.557424
 )
 
+geocoded$is_geocoded <- "yes"
 
+d_clean_geocoded <- left_join(d_clean, geocoded, by = "ecuuid")
+
+d_clean_geocoded <- 
+  d_clean_geocoded %>% mutate(
+    latitude = if_else(condition = is.na(latitude.x), true = latitude.y, false = latitude.x), 
+    longitude = if_else(condition = is.na(longitude.x), true = longitude.y, false = longitude.x)
+  )
+
+table(is.na(d_clean_geocoded$latitude))
+
+summary(d_clean_geocoded$latitude)
+
+write_rds(d_clean_geocoded, "d_clean_geocoded.rds")
