@@ -1,0 +1,200 @@
+---
+title: "Untitled"
+author: "Remek"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+Sys.setenv(LANGUAGE = "en")
+
+library(sf)
+library(tidyverse)
+library(stringr)
+library(ggmap)
+library(osmdata)
+library(units)
+library(nngeo)
+
+load("distances_clead_geocoded.RData")
+```
+
+## Odległości od ulic i zieleni
+
+### Od ulic głównych (przykład)
+
+```{r dms2plot}
+ggplot() + 
+  geom_sf(data = d_4326, color = "red", size = 2) +
+  geom_sf(data = main_streets_2$osm_lines, color = "darkgray") +
+  geom_sf(data = connect_to_main_streets_2, color = "blue", alpha = 0.5)
+```
+
+### Od głównych i pozostałych ulic (przykład)
+
+Na mapie dla czytelności mamy tylko wybrany fragment Śródmieścia.
+
+Niebieskie linie oznaczają dystans od ulic głównych, zielone od ulic pozostałych.
+
+```{r ds2plot}
+
+# http://bboxfinder.com/#51.757003,19.471807,51.776816,19.499960 
+
+ggplot() + 
+  geom_sf(data = main_streets$osm_lines, color = "darkgray") +
+  geom_sf(data = streets$osm_lines, color = "gray") + 
+  geom_sf(data = d_4326, color = "red", size = 2) +
+  geom_sf(data = connect_to_main_streets, color = "blue", alpha = 0.5) +
+  geom_sf(data = connect_to_streets, color = "green") +
+  coord_sf(xlim = c(19.475, 19.488),
+           ylim = c(51.764, 51.77))
+```
+
+### Statystyki opisowe - ulice
+
+Mamy 208 punktów zgłoszonych dzikich wysypisk, z geolokalizacją i obliczonymi odległościami.
+
+```{r summdms2}
+dist_mainstreets <- dms2
+
+hist(dist_mainstreets, xlab = "Odległość punktu od najbliższej ulicy głównej [m]")
+summary(dms2)
+```
+
+```{r summds}
+dist_otherstreets <- ds2
+
+hist(dist_otherstreets, xlab = "Odległość punktu od pozostałej, najbliższej ulicy [m]")
+summary(ds2)
+
+```
+
+W przypadku ulic "pozostałych", **odległości są w mojej ocenie niewielkie**.
+
+Mediana to nieco ponad 8 metrów, zaś 25% punktów leży w odległości poniżej 3.3 m. 75% punktów to odległość poniżej 17.5 metra!
+
+Maksymalna zanotowana odległość punktu od ulicy "pozostałej" to niecałe 300 m, to wartość silnie odstająca.
+
+Jest tylko jeden punkt, dla którego odległość od ulicy "głównej" jest mniejsza, niż od "pozostałej"
+
+```{r ds-dms, echo=TRUE}
+table(dist_mainstreets < dist_otherstreets)
+```
+
+### Statystyki opisowe - zieleń
+
+Korzystam z dwóch typów obszaru z Open Street Map (OSM) - 'leisure': 'park', 'landuse': 'grass'.
+
+Odległość od parków:
+
+```{r summdistpark}
+hist(dpark, xlab = "Odległość punktu od najbliższego parku [m]")
+summary(dpark)
+```
+
+Odległości są znacznie większe, niż w przypadku ulic. Mediana to 400 m.
+
+Odległość od terenów trawiastych:
+
+```{r summgrass}
+hist(dgrass, xlab = "Odległość punktu od najbliższego parku [m]")
+summary(dgrass)
+```
+
+Dla terenów trawiastych mediana to niecałe 38 metrów, 25% punktów leży w odległości poniżej 8 m. 75% punktów to odległość poniżej 200 metrów.
+
+Maksymalna zanotowana odległość punktu od terenu trawiastego to niecałe około 2 786 m, to wartość silnie odstająca. Każdy rozkład wyliczonej tu odległości jest mocno prawoskośny, wartości odstające są po stronie wartości maksymalnych.
+
+Dla 17 punktów odległość od parku jest większa, niż od terenu trawiastego:
+
+```{r, echo=TRUE}
+table(dpark > dgrass)
+```
+
+Zatem zobaczmy statystyki opisowe, jeżeli weźmiemy zawsze tę niższą odległość:
+
+```{r}
+tibble(dpark = dpark, dgrass = dgrass) %>% 
+  mutate(d_p_or_g_get_lower = if_else(dpark > dgrass, dgrass, dpark)) %>% 
+  pull(d_p_or_g_get_lower) %>% summary()
+```
+
+Małe różnice w porównaniu do odległości od ter. trawiastych.
+
+### Porównanie odległości
+
+```{r}
+tibble(dpark = dpark, dgrass = dgrass,
+       dist_mainstreets = dist_mainstreets,
+       dist_otherstreets = dist_otherstreets) %>% 
+  mutate(d_p_or_g_get_lower = if_else(dpark > dgrass, dgrass, dpark)) %>% 
+  select(contains("_")) %>% 
+  pivot_longer(cols = starts_with("d"),
+               names_to = "type", values_to = "dist") %>% 
+  ggplot(aes(x = type, y = dist)) + geom_boxplot() + 
+  coord_flip()
+```
+
+```{r}
+tibble(dpark = dpark, dgrass = dgrass,
+       dist_mainstreets = dist_mainstreets,
+       dist_otherstreets = dist_otherstreets) %>% 
+  mutate(d_p_or_g_get_lower = if_else(dpark > dgrass, dgrass, dpark)) %>% 
+  select(contains("_")) %>% 
+  pivot_longer(cols = starts_with("d"),
+               names_to = "type", values_to = "dist") %>% 
+  filter(type != "dist_mainstreets") %>% 
+  ggplot(aes(x = type, y = dist)) + geom_boxplot() + 
+  coord_flip()
+```
+
+## Rozkład punktów w obrębie *landuse*
+
+Czym jest landuse - <https://wiki.openstreetmap.org/wiki/Key:landuse#Common_landuse_key_values_-_developed_land>
+
+Sprawdzając wszystkie dostępne wartości landuse dla naszych 208 punktów, otrzymujemy te wartości dla 94 punktów (w tym wartość "nieznaną" NA), zaś dla 114 nie otrzymujemy nic. Oznacza to, że 94 nasze punkty dzikich wysypisk leżą wewnątrz terenów o opisanym w OSM landuse, zaś 114 nie.
+
+Dla kilku punktów uzyskujemy więcej niż jedną wartość landuse. Ogólnie dla 94 punktów mamy 105 wartości. Ich rozkład:
+
+```{r}
+tibble(ecuuid = d_landuse$ecuuid, 
+       landuse = d_landuse$landuse) %>%
+  ggplot(aes(x = fct_rev(fct_infreq(landuse)))) + 
+  geom_bar() + coord_flip() + labs(x = "landuse value")
+```
+
+Co oznaczają kategorie:
+
+-   residential (37 z 94 punktów), różne budynki mieszkalne <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dresidential>,
+
+-   następnie grass (21), obszar skoszonej i zagospodarowanej trawy nieobjęty w inny sposób bardziej szczegółowym oznaczeniem <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dgrass>,
+
+-   forest (14 punktów, należałoby też przeliczyć odległości razem z innymi rodzajami zieleni) las gospodarczy / uprawy leśne <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dforest>,
+
+-   browfield (10) tereny przeznaczone pod nową zabudowę, gdzie stare budynki zostały rozebrane i uprzątnięte <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dbrownfield>,
+
+-   retail (7) handel detaliczny, jak sklepy <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dretail>
+
+-   farmland (5) użytki rolne, uprawa zbóż czy kwiatów <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dfarmland>
+
+-   allotments (2) ziema przekazany mieszkańcom pod uprawę warzyw i kwiatów [ogródki działkowe?] <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dallotments>
+
+-   farmyard (1) obszar z zabudowaniami plus otwarta przestrzeń pomiędzy nimi i krzewy/drzewa wokół nich <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dfarmyard>
+
+-   industrial (1) teren przemysłowy <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dindustrial>
+
+-   meadow (1) łąka lub pastwisko [dodać do odległości od zieleni?] <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dmeadow>
+
+-   religious (1) obszar wykorzystywany do celów religijnych, często jako teren otaczający miejsce kultu, np. meczety, kościoły <https://wiki.openstreetmap.org/wiki/Tag:landuse%3Dreligious>
+
+-   NA (5).
+
+#### Notka metodologiczna
+
+Dane Open Street Map dotyczące dróg już w 2017 roku były kompletne powyżej 80% <https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0180698>
+
+Wyjaśnienia wymaga landuse, a dokładniej co oznacza NA (5 punktów) i co oznacza sytuacja, kiedy punkt z dzikim wysypiskiem nie przecina się z żadnym obszarem landuse (114 punktów). Sprawdzając na stronie <https://osmlanduse.org/#11.74419540361252/19.3991/51.78998/0/> mam informację, że cały oglądany teren Łodzi i okolic jest opisany (unmapped area 0%).
