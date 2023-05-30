@@ -8,7 +8,6 @@ photos/
 *.xlsx
 *.xlsm
 *.csv
-*.jpg
 *.png
 *.zip
 goggle_maps_reg.R
