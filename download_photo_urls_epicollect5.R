@@ -8,8 +8,8 @@ library(tidyverse)
 
 # 1: make df with photo urls ####
 
-previous_file <- "2022-07-26-form-1__dzikie-wysypiska.json"
-my_fresh_file <- "2022-08-16-form-1__dzikie-wysypiska.json"
+previous_file <- "2022-08-16-form-1__dzikie-wysypiska.json"
+my_fresh_file <- "2023-05-30-form-1__dzikie-wysypiska.json"
 
 l_fresh <- jsonlite::fromJSON(txt = my_fresh_file,
                         flatten = TRUE)

@@ -5,9 +5,11 @@
 photos/
 *.json
 *.xlsx
+*.xlsm
 *.csv
 *.jpg
 *.png
+*.zip
 goggle_maps_reg.R
 slajdy_fgi_15_lipca_cache/
 slajdy_fgi_15_lipca_files/
