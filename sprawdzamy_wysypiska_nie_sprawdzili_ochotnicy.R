@@ -128,6 +128,25 @@ dim(dist_spr_306_d)
 # jest OK ale jak teraz z tego skorzystać? 
 
 # pomysły: zrobić z wide to long 
+## najpierw podać id w wierszach i kolumnach 
+
+dist_df <- data.frame(dist_spr_306_d)
+
+dist_df$ecuuid <- joined_spr_306$ecuuid
+
+names(dist_df)[-307] <- joined_spr_306$ecuuid
+
+dist_df_long <- pivot_longer(data = dist_df, cols = !ecuuid)
+
+dist_df_long_not_same <- dist_df_long %>% filter(ecuuid != name) %>% 
+  mutate(value = as.numeric(value))
+
+summary(dist_df_long_not_same$value)
+
+dist_df_long_not_same %>% 
+  filter(value < 10) %>% 
+  arrange(value)
+
 # może najpierw ograniczyć x do punktów które to niby są sprawdzeniem? 
 # potem wykluczyć te, których sprawdzenie nie dotyczyło? 
 
