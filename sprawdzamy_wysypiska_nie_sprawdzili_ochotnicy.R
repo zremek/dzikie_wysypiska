@@ -8,6 +8,8 @@ library(osmdata)
 library(units)
 library(nngeo)
 library(jsonlite)
+library(writexl)
+
 
 ###### dystansy pomiędzy wszystkimi punktami stan na 11. lipca 2023 ################
 
@@ -41,6 +43,7 @@ summary(d_geocoded)
 
 spr <- d_spr %>% select(ec5_uuid,
                         created_at,
+                        title, 
                         `9_Czy_sprawdzasz_sta`,
                         `5_Tutaj_zlokalizowan.latitude`,
                         `5_Tutaj_zlokalizowan.longitude`)
@@ -88,9 +91,9 @@ joined_spr <- joined_spr %>% mutate(
 )
 
 
-joined_spr %>% 
-  filter(is.na(longitude)) %>% 
-  View()
+# joined_spr %>% 
+#   filter(is.na(longitude)) %>% 
+#   View()
 
 joined_spr_306 <- joined_spr %>% 
   filter(!is.na(longitude)) %>% 
@@ -121,7 +124,7 @@ dist_spr_306_d <- sf::st_distance(joined_spr_306_4326,
                                      joined_spr_306_4326,
                                      by_element = FALSE)
 
-dist_spr_306_d %>% View() # policzyło się :) mam macież 
+# dist_spr_306_d %>% View() # policzyło się :) mam macież 
 
 dim(dist_spr_306_d)
 
@@ -143,13 +146,38 @@ dist_df_long_not_same <- dist_df_long %>% filter(ecuuid != name) %>%
 
 summary(dist_df_long_not_same$value)
 
-dist_df_long_not_same %>% 
+d10 <- dist_df_long_not_same %>% 
   filter(value < 10) %>% 
   arrange(value)
+
+# View(d10)
+
+# odległość od A do B jest jak od B do A
+# czyli jak się pozbyć "podwójnych" rekordów? 
+# https://stackoverflow.com/questions/9028369/removing-duplicate-combinations-irrespective-of-order 
+
+d10_2 <- d10[ !duplicated(apply(d10, 1, sort), MARGIN = 2), ] # działa :) 
+
+nrow(d10) / 2 == nrow(d10_2)
 
 # może najpierw ograniczyć x do punktów które to niby są sprawdzeniem? 
 # potem wykluczyć te, których sprawdzenie nie dotyczyło? 
 
+d10_2_j <- left_join(x = d10_2,
+          y = joined_spr_306 %>% select(ecuuid, czy_sprawdzasz, title))
+  
+  
+  
+d10_2_j_j <-   
+  left_join(x = d10_2_j, 
+              y = joined_spr_306 %>% select(ecuuid, czy_sprawdzasz, title), 
+              by = c("name" = "ecuuid"))
+
+### muszę mieć Title bo po tym mogę przeglądać e5 ########### 
+
+# writexl::write_xlsx(d10_2_j_j, "d10_2_j_j.xlsx")
 
 
-
+dist_df_long_not_same %>% 
+  filter(value < 15) %>% 
+  arrange(value)
