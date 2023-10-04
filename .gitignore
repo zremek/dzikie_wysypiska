@@ -9,6 +9,7 @@ data_exploration.md
 *.xlsm
 *.csv
 *.png
+*.pdf
 *.zip
 *qgs
 *qgs~

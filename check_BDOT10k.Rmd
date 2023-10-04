@@ -15,11 +15,11 @@ library(tidyverse)
 library(mapview)
 ```
 
-# Sprawdzę wybrane obiekty z BDOT10k. 
+# Sprawdzę wybrane obiekty z BDOT10k.
 
 ## Składowisko odpadów OT_PTSO_A
 
-![](images/Zrzut ekranu 2023-09-4 o 16.22.09.png)
+![](images/Zrzut%20ekranu%202023-09-4%20o%2016.22.09.png)
 
 ```{r}
 path_bodt <- "BDOT10k_1061_SHP/"
