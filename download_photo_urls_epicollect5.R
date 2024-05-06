@@ -6,10 +6,11 @@ library(tidyverse)
 # step 0: manually login and download json file #####
 # from https://five.epicollect.net/project/dzikie-wysypiska/data 
 
-# 1: make df with photo urls ####
+# 1: make df with photo urls #### TODO 2024_05_06_dzikie 
 
-previous_file <- "json_data/2023_10_12_dzikie.json"
-my_fresh_file <- "json_data/2023_11_10_dzikie.json"
+previous_file <- "json_data/2023_11_10_dzikie.json"
+my_fresh_file <- "json_data/2023_12_01_dzikie.json" 
+# grudzień 337, listopad 338 obserwacji, diff 0
 
 l_fresh <- jsonlite::fromJSON(txt = my_fresh_file,
                         flatten = TRUE)
