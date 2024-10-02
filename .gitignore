@@ -3,6 +3,7 @@
 .Ruserdata
 .DS_Store
 data_exploration.md
+*.html
 *.RData
 *.json
 *.xlsx
