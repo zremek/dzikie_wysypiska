@@ -2,6 +2,7 @@ library(tidyverse)
 library(readxl)
 library(DataExplorer)
 library(sjPlot)
+library(sjmisc)
 
 # this script makes final dataset from pilot study 
 
@@ -64,7 +65,7 @@ fin3 <- left_join(d_inputed %>% select(-latitude, -longitude),
 # 
 
 
-fin3 <- fin3 %>% mutate_at(c(
+fctors <- c(
   "more_dump",
   "area",
   "character",
@@ -77,21 +78,66 @@ fin3 <- fin3 %>% mutate_at(c(
   "district",
   "more_dumps_input",
   "is_geocoded"
-), as_factor)
+)
+
+fin3 <- fin3 %>% mutate_at(fctors, as_factor)
 
 
-fin3 %>% select_if(is.factor) %>% sjmisc::frq()
+
+fin3 %>% select(all_of(fctors)) %>% frq()
+
 
 # TODO kolejność kategorii w faktorach 
+
+levels(fin3$span)
+
+fin3 <- 
+fin3 %>% 
+  mutate(
+    area = fct_relevel(area, levels(area)[2]),
+    area = fct_relevel(area, levels(area)[4], after = Inf),
+    span = fct_relevel(span, levels(span)[3]), 
+    span = fct_relevel(span, levels(span)[5], after = Inf), 
+    span = fct_relevel(span, levels(span)[4], after = Inf),
+    volunteer_id = fct_infreq(volunteer_id), 
+    more_dumps_input = fct_relevel(more_dumps_input, levels(more_dumps_input)[2]),
+    place = fct_infreq(place), 
+    place = fct_relevel(place, "inne", after = Inf)
+    ) %>% select(all_of(fctors)) %>% frq()
+
+# sjmisc::shorten_string() może użyć? 
 
 # 
 # należałoby też przekodować type na yes / no z uwzględnieniem NA
 
 
+
 fin3 %>% 
-  mutate(across(starts_with("type_"),
-                       function(x) nchar(x) > 0)) %>%
-  View()
+  select(visible, type_glass) %>% 
+  mutate(glass = case_when(
+    !is.na(visible) & nchar(type_glass) > 0 ~ "Wybrano", 
+    !is.na(visible) & is.na(type_glass) ~ "Nie wybrano",
+    is.na(visible) ~ NA
+  )) %>% View()
+
+
+types_multi <- fin3 %>% select(starts_with("type_")) %>% names()
+
+
+fin3 <- fin3 %>% 
+  mutate(across(types_multi[1:19], 
+            function(x) case_when(
+              !is.na(visible) & nchar(x) > 0 ~ "Wybrano", 
+              !is.na(visible) & is.na(x) ~ "Nie wybrano",
+              is.na(visible) ~ NA
+            )))
+
+
+fin3 <- fin3 %>% mutate_at(types_multi[1:19], as_factor)
+
+fin3 %>% select_if(is.factor) %>% sjmisc::frq()
+
+
 
 
 # 
@@ -101,6 +147,12 @@ fin3 %>%
 # 
 # etykietki zmiennych i wartości opisać 
 
+
+# TODO district doliczyć dla geokodowanych wartości
+
+# TODO is_geocoded ogarnąć albo usunąć, obecnie samo "yes" 
+
+# TODO type_count pokazuje wartości przed imputem, ogarnąć albo usunąć 
 
 
 
