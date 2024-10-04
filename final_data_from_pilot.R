@@ -38,7 +38,7 @@ tibble(geocoded = names(d_geocoded),
 # fin2 <- left_join(d_inputed, d_geocoded, by = "ecuuid")
 
 
-table(d_geocoded$district, d_geocoded$is_geocoded) #TODO uzupełnić dzielnice
+table(d_geocoded$district, d_geocoded$is_geocoded) #uzupełnić dzielnice
 
 
 fin3 <- left_join(
@@ -91,7 +91,7 @@ fin3 <- fin3 %>% mutate_at(fctors, as_factor)
 fin3 %>% select(all_of(fctors)) %>% frq()
 
 
-# TODO kolejność kategorii w faktorach
+# kolejność kategorii w faktorach
 
 levels(fin3$span)
 
@@ -153,7 +153,7 @@ fin3 %>% select_if(is.factor) %>% sjmisc::frq()
 # etykietki zmiennych i wartości opisać
 
 
-# TODO district doliczyć dla geokodowanych wartości
+# district doliczyć dla geokodowanych wartości
 
 
 shp <- sf::st_read(dsn = ".", layer = "Jednostki_ewidencyjne")
@@ -193,7 +193,7 @@ fin4 <- fin4 %>%
 
 
 
-# TODO is_geocoded ogarnąć albo usunąć, obecnie samo "yes"
+# is_geocoded ogarnąć albo usunąć, obecnie samo "yes"
 
 
 fin4 <- fin4 %>%
@@ -201,7 +201,7 @@ fin4 <- fin4 %>%
 
 frq(fin4$is_geocoded)
 
-# TODO type_count pokazuje wartości przed imputem, ogarnąć albo usunąć
+# type_count pokazuje wartości przed imputem, ogarnąć albo usunąć
 
 
 fin5 <-
@@ -213,9 +213,52 @@ fin5 <-
     append = TRUE
   )
 
+
+fin5 <- fin5 %>% 
+  mutate(sum_type = if_else(
+    is.na(visible), NA, sum_type
+  ))
+
+
 table(fin5$type_sum == fin5$sum_type, useNA = "always")
 
-# TODO time zone stała?
+# time zone stała?
 
 
 table(fin3$lct_zone, useNA = "always")
+
+
+sjmisc::shorten_string(as.character(fin5$place[2:30]), 20)
+
+
+# usuwam niepotrzebne zmienne
+
+fin5 <- fin5 %>% 
+  select(-lct_zone, -type_sum)
+
+summary(fin5)
+
+
+# zrobić jednolitą kolejność w faktorach type "Wybrano" jako pierwsza 
+
+
+fin5 <- fin5 %>% mutate(across(types_multi[1:19], 
+                       function(x) fct_relevel(x, "Wybrano")))
+
+
+create_report(fin5 %>% select(-geometry))
+
+DataExplorer::plot_bar(fin5)
+
+sjPlot::view_df(fin5, show.frq = TRUE)
+
+
+dim(fin5)
+
+# save files
+
+write_rds(fin5, "final_data_from_pilot_e5_sf.rds")
+
+write_rds(fin5 %>% select(-geometry), "final_data_from_pilot_e5.rds")
+
+
